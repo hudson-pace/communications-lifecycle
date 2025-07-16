@@ -1,0 +1,28 @@
+﻿@page "/tictactoe"
+@rendermode InteractiveServer
+
+<PageTitle>Tic-Tac-Toe</PageTitle>
+<h3>Tic-Tac-Toe</h3>
+
+@for (int i = 0; i < board.Length; i++)
+{
+  int k = i;
+  <button class="tttButton" @onclick="() => ClickButton(k)"><span>@(board[i] == 0 ? " " : board[i] == 1 ? "X" : "O")</span></button>
+  if ((i + 1) % 3 == 0)
+  {
+    <br />
+  }
+}
+
+@code {
+  int[] board = new int[] {0,0,0,0,0,0,0,0,0};
+  bool xTurn = true;
+  private void ClickButton(int buttonIndex)
+  {
+    if (board[buttonIndex] == 0)
+    {
+      board[buttonIndex] = xTurn ? 1 : 2;
+      xTurn = !xTurn;
+    }
+  }
+}
