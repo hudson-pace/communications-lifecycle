@@ -1,0 +1,22 @@
+﻿@page "/reverser"
+@rendermode InteractiveServer
+
+<PageTitle>Reverser</PageTitle>
+<h3>Reverser</h3>
+<input @bind="text"
+        @bind:event="oninput"/>
+<button @onclick="OnClearButtonClick">Clear</button>
+<p>@ReverseText(text)</p>
+@code {
+  string text = "";
+  private void OnClearButtonClick()
+  {
+    text = string.Empty;
+  }
+  private string ReverseText(string t)
+  {
+    char[] charArray = t.ToCharArray();
+    Array.Reverse(charArray);
+    return new string(charArray);
+  }
+}
