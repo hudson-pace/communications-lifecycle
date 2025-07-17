@@ -18,15 +18,18 @@ namespace BlazorApp1.Controllers
             return LocalRedirect(returnUrl ?? Url.Content("~/"));
         }
 
-        public IActionResult SignOut()
+        public IActionResult SignOut([FromQuery] string returnUrl)
         {
+            if (!User.Identity.IsAuthenticated) {
+                return LocalRedirect(returnUrl ?? Url.Content("~/"));
+            }
             return new SignOutResult(
                 new[]
                 {
                     OktaDefaults.MvcAuthenticationScheme,
                     CookieAuthenticationDefaults.AuthenticationScheme,
                 },
-                new AuthenticationProperties { RedirectUri = "/" }
+                new AuthenticationProperties { RedirectUri = Url.Content("~/") }
             );
         }
 
