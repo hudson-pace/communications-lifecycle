@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /App
+EXPOSE 8080
+EXPOSE 8081
+
+# copy everything
+COPY . ./
+# restore as distinct layers
+RUN dotnet restore
+# build and publish as a release
+RUN dotnet clean
+RUN dotnet publish -c Release -o out
+
+# build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR /App
+COPY --from=build /App/out .
+ENTRYPOINT ["dotnet", "BlazorApp1.dll"]
