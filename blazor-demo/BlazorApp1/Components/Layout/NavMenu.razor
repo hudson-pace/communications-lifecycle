@@ -43,6 +43,19 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Tic-Tac-Toe
             </NavLink>
         </div>
+        <div class="nav-item px-3">
+            <AuthorizeView>
+                <Authorized>
+                    <a href="Account/SignOut">Sign Out.</a>>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="nav-link" href="Account/SignIn">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Sign In!
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+            
+        </div>
     </nav>
 </div>
 
