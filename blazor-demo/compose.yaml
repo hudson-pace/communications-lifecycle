@@ -1,0 +1,11 @@
+services:
+  aspnet:
+    image: counter-image
+    environment:
+      Okta:OktaDomain: https://integrator-6557829.okta.com
+      Okta:ClientId: 0oatau4r8y5V87pJM697
+      Okta:ClientSecret: d2ucObbOSEm6R5cvebN8WoBCwSEjNzjWYq2PUNX5WOa7IaQ9-XTPolSkLBx3K2BL
+      Okta:AuthorizationServerId: default
+    ports:
+      - "8000:8080"
+    build: .
