@@ -8,13 +8,13 @@ services:
       Okta:ClientSecret: ${OKTA_CLIENT_SECRET}
       Okta:AuthorizationServerId: ${OKTA_AUTHORIZATION_SERVER_ID}
       ConnectionStrings:BlazorWebAppContext: "Server=sql-server;Database=MyDb;User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True"
-
     ports:
       - "8000:8080"
     build: .
     depends_on:
       sql-server:
         condition: service_healthy
+    entrypoint: ["dotnet", "BlazorApp1.dll"]
   sql-server:
     image: mcr.microsoft.com/mssql/server:2022-CU13-ubuntu-20.04
     container_name: sql-server-container
