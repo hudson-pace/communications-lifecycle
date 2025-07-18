@@ -1,10 +1,11 @@
 version: '2.4'
 services:
   aspnet:
-    entrypoint: ["dotnet", "watch", "run", "--urls", "http://*:8080"]
+    entrypoint: ["dotnet", "watch", "run", "--urls", "http://*:8080", "--non-interactive"]
     volumes:
       - ./BlazorApp1/BlazorApp1.csproj:/App/BlazorApp1/BlazorApp1.csproj
       - ./BlazorApp1/Components:/App/BlazorApp1/Components
       - ./BlazorApp1/Controllers:/App/BlazorApp1/Controllers
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=true
+      - DOTNET_WATCH_RESTART_ON_RUDE=1
