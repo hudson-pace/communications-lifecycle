@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Okta.AspNetCore;
 using BlazorWebApp.Data;
+using BlazorApp1.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
@@ -20,6 +21,7 @@ builder.Services.AddDbContextFactory<BlazorWebAppContext>(options =>
         builder.Configuration.GetConnectionString("BlazorWebAppContext") ??
         throw new InvalidOperationException("Connection string 'BlazorWebAppContext' not found.")));
 
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorizationCore();
 builder.Services.ConfigureApplicationCookie(options =>

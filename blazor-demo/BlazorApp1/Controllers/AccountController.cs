@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Okta.AspNetCore;
 using BlazorApp1.Models;
 using Microsoft.EntityFrameworkCore;
+using BlazorApp1.Services;
 
 namespace BlazorApp1.Controllers
 {
@@ -11,9 +12,11 @@ namespace BlazorApp1.Controllers
     public class AccountController : Controller
     {
         private readonly IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> _dbContextFactory;
-        public AccountController(IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> dbContextFactory)
+        private readonly IUserProfileService _userProfileService;
+        public AccountController(IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> dbContextFactory, IUserProfileService userProfileService)
         {
             _dbContextFactory = dbContextFactory;
+            _userProfileService = userProfileService;
         }
         public async Task<IActionResult> SignIn([FromQuery] string returnUrl)
         {
@@ -21,23 +24,8 @@ namespace BlazorApp1.Controllers
             {
                 return Challenge(OktaDefaults.MvcAuthenticationScheme);
             }
-
-            var sub = User.FindFirst("sub");
-            await GetUserProfile(sub.Value);
+            await _userProfileService.GetAsync();
             return LocalRedirect(returnUrl ?? Url.Content("~/"));
-        }
-
-        // Get User Profile if it exists, else add one.
-        private async Task GetUserProfile(string sub)
-        {
-            using var context = _dbContextFactory.CreateDbContext();
-            UserProfile? UserProfile = await context.UserProfile.FirstOrDefaultAsync(u => u.Sub == sub);
-            if (UserProfile is null)
-            {
-                UserProfile = new UserProfile { Sub = sub };
-                context.UserProfile.Add(UserProfile);
-                await context.SaveChangesAsync();
-            }
         }
         public IActionResult SignOut([FromQuery] string returnUrl)
         {
