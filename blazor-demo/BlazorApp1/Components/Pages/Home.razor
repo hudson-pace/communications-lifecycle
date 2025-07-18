@@ -7,15 +7,4 @@
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
-<AuthorizeView>
-  <Authorized>
-  @if (context.User.Identity.IsAuthenticated)
-  {
-    <h2>Hey @context.User.Identity.Name!</h2>
-  }
-  </Authorized>
-  <NotAuthorized>
-    <p>oh</p>
-  </NotAuthorized>
-</AuthorizeView>
 <Counter IncrementAmount="10"/>
