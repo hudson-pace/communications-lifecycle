@@ -20,7 +20,8 @@ namespace BlazorApp1.Controllers
 
         public IActionResult SignOut([FromQuery] string returnUrl)
         {
-            if (!User.Identity.IsAuthenticated) {
+            if (!User.Identity.IsAuthenticated)
+            {
                 return LocalRedirect(returnUrl ?? Url.Content("~/"));
             }
             return new SignOutResult(
