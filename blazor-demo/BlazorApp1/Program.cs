@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Okta.AspNetCore;
 using BlazorWebApp.Data;
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContextFactory<BlazorWebAppContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("BlazorWebAppContext") ?? throw new InvalidOperationException("Connection string 'BlazorWebAppContext' not found.")));
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 
@@ -18,9 +16,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddDbContextFactory<BlazorWebAppContext>(options =>
-    options.UseSqlite(
+    options.UseSqlServer(
         builder.Configuration.GetConnectionString("BlazorWebAppContext") ??
         throw new InvalidOperationException("Connection string 'BlazorWebAppContext' not found.")));
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorizationCore();
 builder.Services.ConfigureApplicationCookie(options =>
@@ -55,9 +54,15 @@ if (!app.Environment.IsDevelopment())
     app.UseMigrationsEndPoint();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<BlazorWebAppContext>();
+    dbContext.Database.Migrate();
+}
 
 
-app.UseHttpsRedirection();
+
+    app.UseHttpsRedirection();
 
 
 app.UseAntiforgery();
