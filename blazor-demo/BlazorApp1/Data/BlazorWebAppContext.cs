@@ -9,11 +9,12 @@ namespace BlazorWebApp.Data
 {
     public class BlazorWebAppContext : DbContext
     {
-        public BlazorWebAppContext (DbContextOptions<BlazorWebAppContext> options)
+        public BlazorWebAppContext(DbContextOptions<BlazorWebAppContext> options)
             : base(options)
         {
         }
 
         public DbSet<BlazorApp1.Models.Movie> Movie { get; set; } = default!;
+        public DbSet<BlazorApp1.Models.UserProfile> UserProfile { get; set; } = default!;
     }
 }
