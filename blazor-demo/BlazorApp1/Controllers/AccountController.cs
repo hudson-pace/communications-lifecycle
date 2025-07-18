@@ -23,7 +23,7 @@ namespace BlazorApp1.Controllers
             }
 
             var sub = User.FindFirst("sub");
-            await GetUserProfile(sub.ToString());
+            await GetUserProfile(sub.Value);
             return LocalRedirect(returnUrl ?? Url.Content("~/"));
         }
 
