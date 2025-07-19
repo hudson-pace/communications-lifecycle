@@ -1,0 +1,83 @@
+@page "/comments/delete"
+@using Microsoft.EntityFrameworkCore
+@using BlazorApp1.Models
+@inject IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<p>Are you sure you want to delete this?</p>
+<div>
+    <h2>Comment</h2>
+    <hr />
+    @if (comment is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Content</dt>
+            <dd class="col-sm-10">@comment.Content</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CreatedAt</dt>
+            <dd class="col-sm-10">@comment.CreatedAt</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">UpdatedAt</dt>
+            <dd class="col-sm-10">@comment.UpdatedAt</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Upvotes</dt>
+            <dd class="col-sm-10">@comment.Upvotes</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Downvotes</dt>
+            <dd class="col-sm-10">@comment.Downvotes</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">IsEdited</dt>
+            <dd class="col-sm-10">@comment.IsEdited</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">AuthorId</dt>
+            <dd class="col-sm-10">@comment.AuthorId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">PostId</dt>
+            <dd class="col-sm-10">@comment.PostId</dd>
+        </dl>
+        <EditForm method="post" Model="comment" OnValidSubmit="DeleteComment" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(comment is null)">Delete</button> |
+            <a href="/comments">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private Comment? comment;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        comment = await context.Comment.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (comment is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteComment()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Comment.Remove(comment!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/comments");
+    }
+}

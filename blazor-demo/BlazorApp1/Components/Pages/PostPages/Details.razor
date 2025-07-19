@@ -1,0 +1,62 @@
+@page "/posts/details"
+@using Microsoft.EntityFrameworkCore
+@using BlazorApp1.Models
+@inject IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Post</h2>
+    <hr />
+    @if (post is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Title</dt>
+            <dd class="col-sm-10">@post.Title</dd>
+            <dt class="col-sm-2">Content</dt>
+            <dd class="col-sm-10">@post.Content</dd>
+            <dt class="col-sm-2">CreatedAt</dt>
+            <dd class="col-sm-10">@post.CreatedAt</dd>
+            <dt class="col-sm-2">UpdatedAt</dt>
+            <dd class="col-sm-10">@post.UpdatedAt</dd>
+            <dt class="col-sm-2">Upvotes</dt>
+            <dd class="col-sm-10">@post.Upvotes</dd>
+            <dt class="col-sm-2">Downvotes</dt>
+            <dd class="col-sm-10">@post.Downvotes</dd>
+            <dt class="col-sm-2">IsEdited</dt>
+            <dd class="col-sm-10">@post.IsEdited</dd>
+            <dt class="col-sm-2">Tags</dt>
+            <dd class="col-sm-10">@post.Tags</dd>
+            <dt class="col-sm-2">AuthorId</dt>
+            <dd class="col-sm-10">@post.AuthorId</dd>
+        </dl>
+        <div>
+            <a href="@($"/posts/edit?id={post.Id}")">Edit</a> |
+            <a href="@($"/posts")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Post? post;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        post = await context.Post.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (post is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

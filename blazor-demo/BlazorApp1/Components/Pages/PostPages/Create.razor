@@ -1,0 +1,86 @@
+@page "/posts/create"
+@using Microsoft.EntityFrameworkCore
+@using BlazorApp1.Models
+@inject IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Post</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Post" OnValidSubmit="AddPost" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label> 
+                <InputText id="title" @bind-Value="Post.Title" class="form-control" /> 
+                <ValidationMessage For="() => Post.Title" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Content:</label> 
+                <InputText id="content" @bind-Value="Post.Content" class="form-control" /> 
+                <ValidationMessage For="() => Post.Content" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdat" class="form-label">CreatedAt:</label> 
+                <InputDate id="createdat" @bind-Value="Post.CreatedAt" class="form-control" /> 
+                <ValidationMessage For="() => Post.CreatedAt" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedat" class="form-label">UpdatedAt:</label> 
+                <InputDate id="updatedat" @bind-Value="Post.UpdatedAt" class="form-control" /> 
+                <ValidationMessage For="() => Post.UpdatedAt" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="upvotes" class="form-label">Upvotes:</label> 
+                <InputNumber id="upvotes" @bind-Value="Post.Upvotes" class="form-control" /> 
+                <ValidationMessage For="() => Post.Upvotes" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="downvotes" class="form-label">Downvotes:</label> 
+                <InputNumber id="downvotes" @bind-Value="Post.Downvotes" class="form-control" /> 
+                <ValidationMessage For="() => Post.Downvotes" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="isedited" class="form-label">IsEdited:</label> 
+                <InputCheckbox id="isedited" @bind-Value="Post.IsEdited" class="form-check-input" /> 
+                <ValidationMessage For="() => Post.IsEdited" class="text-danger" /> 
+            </div>        
+            @*
+            <div class="mb-3">
+                <label for="tags" class="form-label">Tags:</label> 
+                <InputText id="tags" @bind-Value="Post.Tags" class="form-control" /> 
+                <ValidationMessage For="() => Post.Tags" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="authorid" class="form-label">AuthorId:</label> 
+                <InputText id="authorid" @bind-Value="Post.AuthorId" class="form-control" /> 
+                <ValidationMessage For="() => Post.AuthorId" class="text-danger" /> 
+            </div>
+            *@
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/posts">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Post Post { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddPost()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Post.Add(Post);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/posts");
+    }
+}
