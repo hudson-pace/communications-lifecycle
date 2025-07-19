@@ -64,15 +64,13 @@ using (var scope = app.Services.CreateScope())
 
 
 
-    app.UseHttpsRedirection();
-
-
-app.UseAntiforgery();
+app.UseHttpsRedirection();
 
 app.MapStaticAssets();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 app.MapControllers();
