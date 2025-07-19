@@ -14,7 +14,9 @@ namespace BlazorWebApp.Data
         {
         }
 
-        public DbSet<BlazorApp1.Models.Movie> Movie { get; set; } = default!;
-        public DbSet<BlazorApp1.Models.UserProfile> UserProfile { get; set; } = default!;
+        public DbSet<Movie> Movie { get; set; } = default!;
+        public DbSet<UserProfile> UserProfile { get; set; } = default!;
+        public DbSet<Post> Post { get; set; } = default!;
+        public DbSet<Comment> Comment { get; set; } = default!;
     }
 }
