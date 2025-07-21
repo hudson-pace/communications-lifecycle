@@ -3,8 +3,10 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using BlazorApp1.Models
 @using BlazorWebApp.Data
+@using BlazorApp1.Services;
 @implements IAsyncDisposable
 @inject IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> DbFactory
+@inject MovieApiService MovieApiService
 
 <PageTitle>Index</PageTitle>
 
@@ -14,6 +16,13 @@
     <a href="movies/create">Create New</a>
 </p>
 
+<ul>
+    @foreach (var movie in movies)
+    {
+        <li>@movie.Title, @movie.ReleaseDate, @movie.Genre, @movie.Price</li>
+    }
+</ul>
+@*
 <QuickGrid Class="table" Items="context.Movie">
     <PropertyColumn Property="movie => movie.Title" />
     <PropertyColumn Property="movie => movie.ReleaseDate" />
@@ -26,14 +35,36 @@
         <a href="@($"movies/delete?id={movie.Id}")">Delete</a>
     </TemplateColumn>
 </QuickGrid>
+*@
 
 @code {
-    private BlazorWebAppContext context = default!;
+    // private BlazorWebAppContext context = default!;
+    private List<Movie> movies = new();
 
+/*
     protected override void OnInitialized()
     {
-        context = DbFactory.CreateDbContext();
+        // context = DbFactory.CreateDbContext();
+
+    }
+*/
+    protected override async Task OnInitializedAsync()
+    {
+        movies = await MovieApiService.GetMoviesAsync();
+        Console.WriteLine("Got Films!");
+        Console.WriteLine(movies);
+        if (movies is null) {
+            movies = new();
+        } else {
+            foreach (var movie in movies)
+            {
+                Console.WriteLine("Movie!");
+            }
+        }
+    }
+    public async ValueTask DisposeAsync()
+    {
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    // public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

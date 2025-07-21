@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorApp1.Migrations
 {
     [DbContext(typeof(BlazorWebAppContext))]
-    [Migration("20250721134944_MakeAuthorIdNullable")]
-    partial class MakeAuthorIdNullable
+    [Migration("20250721154721_InitialCreat")]
+    partial class InitialCreat
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -165,7 +165,8 @@ namespace BlazorApp1.Migrations
                 {
                     b.HasOne("BlazorApp1.Models.UserProfile", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("BlazorApp1.Models.Comment", null)
                         .WithMany("Replies")
@@ -186,7 +187,8 @@ namespace BlazorApp1.Migrations
                 {
                     b.HasOne("BlazorApp1.Models.UserProfile", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Author");
                 });

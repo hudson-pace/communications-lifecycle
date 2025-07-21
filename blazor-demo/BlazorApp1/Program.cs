@@ -21,6 +21,12 @@ builder.Services.AddDbContextFactory<BlazorWebAppContext>(options =>
         builder.Configuration.GetConnectionString("BlazorWebAppContext") ??
         throw new InvalidOperationException("Connection string 'BlazorWebAppContext' not found.")));
 
+builder.Services.AddScoped<MovieApiService>();
+builder.Services.AddHttpClient("MoviesApi", client =>
+{
+    client.BaseAddress = new Uri("http://movie-api:8080");
+});
+
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorizationCore();

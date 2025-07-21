@@ -1,5 +1,12 @@
 version: '2.4'
 services:
+  movie-api:
+    image: movie-api-image
+    ports:
+      - "5075:8080"
+    build: .
+    entrypoint: ["dotnet", "MoviesApi.dll"]
+
   aspnet:
     image: counter-image
     environment:

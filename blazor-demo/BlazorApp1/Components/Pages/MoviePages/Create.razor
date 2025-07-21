@@ -1,8 +1,10 @@
 @page "/movies/create"
 @using Microsoft.EntityFrameworkCore
 @using BlazorApp1.Models
+@using BlazorApp1.Services
 @inject IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject MovieApiService MovieApiService
 
 <PageTitle>Create</PageTitle>
 
@@ -51,9 +53,12 @@
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddMovie()
     {
+        await MovieApiService.CreateMovieAsync(Movie);
+        /*
         using var context = DbFactory.CreateDbContext();
         context.Movie.Add(Movie);
         await context.SaveChangesAsync();
+        */
         NavigationManager.NavigateTo("/movies");
     }
 }

@@ -5,7 +5,7 @@
 namespace BlazorApp1.Migrations
 {
     /// <inheritdoc />
-    public partial class Rollback : Migration
+    public partial class InitialCreat : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
