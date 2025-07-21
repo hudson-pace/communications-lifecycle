@@ -52,11 +52,12 @@ else
                     <InputCheckbox id="isedited" @bind-Value="Comment.IsEdited" class="form-check-input" />
                     <ValidationMessage For="() => Comment.IsEdited" class="text-danger" />
                 </div>
+                @*
                 <div class="mb-3">
                     <label for="authorid" class="form-label">AuthorId:</label>
                     <InputText id="authorid" @bind-Value="Comment.AuthorId" class="form-control" />
                     <ValidationMessage For="() => Comment.AuthorId" class="text-danger" />
-                </div>
+                </div>*@
                 <div class="mb-3">
                     <label for="postid" class="form-label">PostId:</label>
                     <InputNumber id="postid" @bind-Value="Comment.PostId" class="form-control" />

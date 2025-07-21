@@ -16,7 +16,7 @@ public class Comment
   public bool IsEdited { get; set; }
 
   // Author relationship
-  public string AuthorId { get; set; } = string.Empty;
+  public int? AuthorId { get; set; }
   public UserProfile Author { get; set; } = null!;
 
   // Post relationship

@@ -15,7 +15,7 @@ public class Post
   public List<string> Tags { get; set; } = new();
 
   // Author relationship.
-  public int AuthorId { get; set; }
+  public int? AuthorId { get; set; }
   public UserProfile Author { get; set; } = null!;
 
   // Navigation.

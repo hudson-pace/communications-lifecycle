@@ -18,5 +18,19 @@ namespace BlazorWebApp.Data
         public DbSet<UserProfile> UserProfile { get; set; } = default!;
         public DbSet<Post> Post { get; set; } = default!;
         public DbSet<Comment> Comment { get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.Author)
+                .WithMany()
+                .HasForeignKey(p => p.AuthorId)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Author)
+                .WithMany()
+                .HasForeignKey(p => p.AuthorId)
+                .OnDelete(DeleteBehavior.SetNull);
+        }
     }
 }

@@ -4,6 +4,7 @@ using BlazorWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorApp1.Migrations
 {
     [DbContext(typeof(BlazorWebAppContext))]
-    partial class BlazorWebAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250721134944_MakeAuthorIdNullable")]
+    partial class MakeAuthorIdNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,8 +165,7 @@ namespace BlazorApp1.Migrations
                 {
                     b.HasOne("BlazorApp1.Models.UserProfile", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("BlazorApp1.Models.Comment", null)
                         .WithMany("Replies")
@@ -184,8 +186,7 @@ namespace BlazorApp1.Migrations
                 {
                     b.HasOne("BlazorApp1.Models.UserProfile", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
                 });
