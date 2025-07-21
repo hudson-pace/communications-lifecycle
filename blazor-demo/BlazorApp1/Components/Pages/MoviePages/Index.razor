@@ -22,49 +22,15 @@
         <li>@movie.Title, @movie.ReleaseDate, @movie.Genre, @movie.Price</li>
     }
 </ul>
-@*
-<QuickGrid Class="table" Items="context.Movie">
-    <PropertyColumn Property="movie => movie.Title" />
-    <PropertyColumn Property="movie => movie.ReleaseDate" />
-    <PropertyColumn Property="movie => movie.Genre" />
-    <PropertyColumn Property="movie => movie.Price" />
-
-    <TemplateColumn Context="movie">
-        <a href="@($"movies/edit?id={movie.Id}")">Edit</a> |
-        <a href="@($"movies/details?id={movie.Id}")">Details</a> |
-        <a href="@($"movies/delete?id={movie.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
-*@
 
 @code {
-    // private BlazorWebAppContext context = default!;
     private List<Movie> movies = new();
-
-/*
-    protected override void OnInitialized()
-    {
-        // context = DbFactory.CreateDbContext();
-
-    }
-*/
     protected override async Task OnInitializedAsync()
     {
-        movies = await MovieApiService.GetMoviesAsync();
-        Console.WriteLine("Got Films!");
-        Console.WriteLine(movies);
-        if (movies is null) {
-            movies = new();
-        } else {
-            foreach (var movie in movies)
-            {
-                Console.WriteLine("Movie!");
-            }
+        List<Movie>? movieList = await MovieApiService.GetMoviesAsync();
+        if (movieList is not null) {
+            movies = movieList;
         }
     }
-    public async ValueTask DisposeAsync()
-    {
-    }
-
-    // public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
 }
