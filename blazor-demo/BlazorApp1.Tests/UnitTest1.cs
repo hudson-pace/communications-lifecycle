@@ -1,10 +1,19 @@
+﻿using NUnit.Framework;
+using BlazorApp1;
+
 namespace BlazorApp1.Tests;
 
-public class UnitTest1
+[TestFixture]
+public class Tests
 {
-    [Fact]
+    [SetUp]
+    public void Setup()
+    {
+    }
+
+    [Test]
     public void Test1()
     {
-        Assert.True(true);
+        Assert.Pass();
     }
 }
