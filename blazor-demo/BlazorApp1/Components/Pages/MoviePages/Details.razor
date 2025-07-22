@@ -42,7 +42,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        movie = await context.Movie.FirstOrDefaultAsync(m => m.Id == Id);
+        movie = await context.Movies.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (movie is null)
         {

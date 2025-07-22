@@ -28,6 +28,9 @@ builder.Services.AddHttpClient("MoviesApi", client =>
 });
 
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IForumPostService, ForumPostService>();
+builder.Services.AddScoped<IForumCommentService, ForumCommentService>();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorizationCore();
 builder.Services.ConfigureApplicationCookie(options =>

@@ -1,4 +1,4 @@
-@page "/posts/create"
+@page "/forum/posts/create"
 @using Microsoft.EntityFrameworkCore
 @using BlazorApp1.Models
 @inject IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> DbFactory
@@ -24,32 +24,7 @@
                 <label for="content" class="form-label">Content:</label> 
                 <InputText id="content" @bind-Value="Post.Content" class="form-control" /> 
                 <ValidationMessage For="() => Post.Content" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="createdat" class="form-label">CreatedAt:</label> 
-                <InputDate id="createdat" @bind-Value="Post.CreatedAt" class="form-control" /> 
-                <ValidationMessage For="() => Post.CreatedAt" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="updatedat" class="form-label">UpdatedAt:</label> 
-                <InputDate id="updatedat" @bind-Value="Post.UpdatedAt" class="form-control" /> 
-                <ValidationMessage For="() => Post.UpdatedAt" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="upvotes" class="form-label">Upvotes:</label> 
-                <InputNumber id="upvotes" @bind-Value="Post.Upvotes" class="form-control" /> 
-                <ValidationMessage For="() => Post.Upvotes" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="downvotes" class="form-label">Downvotes:</label> 
-                <InputNumber id="downvotes" @bind-Value="Post.Downvotes" class="form-control" /> 
-                <ValidationMessage For="() => Post.Downvotes" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="isedited" class="form-label">IsEdited:</label> 
-                <InputCheckbox id="isedited" @bind-Value="Post.IsEdited" class="form-check-input" /> 
-                <ValidationMessage For="() => Post.IsEdited" class="text-danger" /> 
-            </div>        
+            </div>
             @*
             <div class="mb-3">
                 <label for="tags" class="form-label">Tags:</label> 
@@ -78,9 +53,11 @@
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddPost()
     {
+        Post.CreatedAt = DateTime.UtcNow;
+        Post.Tags = new();
         using var context = DbFactory.CreateDbContext();
         context.Posts.Add(Post);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/posts");
+        NavigationManager.NavigateTo("/forum");
     }
 }

@@ -17,7 +17,4 @@ public class Post
   // Author relationship.
   public int? AuthorId { get; set; }
   public UserProfile Author { get; set; } = null!;
-
-  // Navigation.
-  public List<Comment> Comments { get; set; } = new();
 }

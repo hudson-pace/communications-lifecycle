@@ -20,9 +20,7 @@ public class Comment
   public UserProfile Author { get; set; } = null!;
 
   // Post relationship
-  public int PostId { get; set; }
+  public int? PostId { get; set; }
   public Post Post { get; set; } = null!;
 
-  // Replies to this comment.
-  public List<Comment> Replies { get; set; } = new();
 }

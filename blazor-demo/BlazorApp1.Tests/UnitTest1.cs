@@ -17,7 +17,7 @@ public class Tests
         BlazorWebAppContext context = testDbContextFactory.CreateDbContext();
 
         // test data
-        context.Post.Add(new Post
+        context.Posts.Add(new Post
         {
             Title = "Test",
             Content = "Test",

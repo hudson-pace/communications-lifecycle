@@ -56,7 +56,7 @@
         await MovieApiService.CreateMovieAsync(Movie);
         /*
         using var context = DbFactory.CreateDbContext();
-        context.Movie.Add(Movie);
+        context.Movies.Add(Movie);
         await context.SaveChangesAsync();
         */
         NavigationManager.NavigateTo("/movies");

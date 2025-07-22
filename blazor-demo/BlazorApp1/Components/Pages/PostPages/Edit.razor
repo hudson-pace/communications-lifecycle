@@ -90,7 +90,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        Post ??= await context.Post.FirstOrDefaultAsync(m => m.Id == Id);
+        Post ??= await context.Posts.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (Post is null)
         {
@@ -127,6 +127,6 @@ else
     private bool PostExists(int id)
     {
         using var context = DbFactory.CreateDbContext();
-        return context.Post.Any(e => e.Id == id);
+        return context.Posts.Any(e => e.Id == id);
     }
 }

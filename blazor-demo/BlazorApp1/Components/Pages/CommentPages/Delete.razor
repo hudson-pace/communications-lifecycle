@@ -65,7 +65,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        comment = await context.Comment.FirstOrDefaultAsync(m => m.Id == Id);
+        comment = await context.Comments.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (comment is null)
         {
@@ -76,7 +76,7 @@
     private async Task DeleteComment()
     {
         using var context = DbFactory.CreateDbContext();
-        context.Comment.Remove(comment!);
+        context.Comments.Remove(comment!);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/comments");
     }

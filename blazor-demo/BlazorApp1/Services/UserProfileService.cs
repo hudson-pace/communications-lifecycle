@@ -19,11 +19,11 @@ public class UserProfileService : IUserProfileService
     var sub = _httpContextAccessor.HttpContext?.User.FindFirst("sub")?.Value;
     if (sub == null) return null;
     using var context = _dbContextFactory.CreateDbContext();
-    UserProfile? UserProfile = await context.UserProfile.FirstOrDefaultAsync(u => u.Sub == sub);
+    UserProfile? UserProfile = await context.UserProfiles.FirstOrDefaultAsync(u => u.Sub == sub);
     if (UserProfile is null)
     {
       UserProfile = new UserProfile { Sub = sub };
-      context.UserProfile.Add(UserProfile);
+      context.UserProfiles.Add(UserProfile);
       await context.SaveChangesAsync();
     }
     return UserProfile;

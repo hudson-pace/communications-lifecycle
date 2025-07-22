@@ -50,7 +50,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        comment = await context.Comment.FirstOrDefaultAsync(m => m.Id == Id);
+        comment = await context.Comments.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (comment is null)
         {

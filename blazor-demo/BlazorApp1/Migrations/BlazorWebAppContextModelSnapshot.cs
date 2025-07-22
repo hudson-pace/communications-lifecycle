@@ -33,9 +33,6 @@ namespace BlazorApp1.Migrations
                     b.Property<int?>("AuthorId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CommentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -49,7 +46,7 @@ namespace BlazorApp1.Migrations
                     b.Property<bool>("IsEdited")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PostId")
+                    b.Property<int?>("PostId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -62,11 +59,9 @@ namespace BlazorApp1.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("CommentId");
-
                     b.HasIndex("PostId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("BlazorApp1.Models.Movie", b =>
@@ -91,7 +86,7 @@ namespace BlazorApp1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movie");
+                    b.ToTable("Movies");
                 });
 
             modelBuilder.Entity("BlazorApp1.Models.Post", b =>
@@ -136,7 +131,7 @@ namespace BlazorApp1.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Post");
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("BlazorApp1.Models.UserProfile", b =>
@@ -155,7 +150,7 @@ namespace BlazorApp1.Migrations
 
                     b.HasKey("UserProfileId");
 
-                    b.ToTable("UserProfile");
+                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("BlazorApp1.Models.Comment", b =>
@@ -165,15 +160,9 @@ namespace BlazorApp1.Migrations
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("BlazorApp1.Models.Comment", null)
-                        .WithMany("Replies")
-                        .HasForeignKey("CommentId");
-
                     b.HasOne("BlazorApp1.Models.Post", "Post")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("PostId");
 
                     b.Navigation("Author");
 
@@ -188,16 +177,6 @@ namespace BlazorApp1.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("BlazorApp1.Models.Comment", b =>
-                {
-                    b.Navigation("Replies");
-                });
-
-            modelBuilder.Entity("BlazorApp1.Models.Post", b =>
-                {
-                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

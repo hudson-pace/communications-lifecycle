@@ -15,25 +15,25 @@ public class ForumPostService : IForumPostService
   public async Task<List<Post>> GetAllAsync()
   {
     using var context = _dbContextFactory.CreateDbContext();
-    List<Post> posts = await context.Post.ToListAsync();
+    List<Post> posts = await context.Posts.ToListAsync();
     return posts;
   }
   public async Task<Post?> GetOneAsync(int postId)
   {
     using var context = _dbContextFactory.CreateDbContext();
-    Post? post = await context.Post.FirstOrDefaultAsync(p => p.Id == postId);
+    Post? post = await context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
     return post;
   }
   public async Task Create(Post Post)
   {
     using var context = _dbContextFactory.CreateDbContext();
-    context.Post.Add(Post);
+    context.Posts.Add(Post);
     await context.SaveChangesAsync();
   }
   public async Task Delete(Post Post)
   {
     using var context = _dbContextFactory.CreateDbContext();
-    context.Post.Remove(Post!);
+    context.Posts.Remove(Post!);
     await context.SaveChangesAsync();
   }
 }

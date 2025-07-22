@@ -1,0 +1,50 @@
+@page "/forum"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BlazorApp1.Models
+@using BlazorWebApp.Data
+@using BlazorApp1.Services
+@implements IAsyncDisposable
+@inject IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> DbFactory
+@inject IForumPostService ForumPostService
+
+<PageTitle>Forum</PageTitle>
+
+<h1>Forum</h1>
+
+<p>
+    <a href="posts/create">Create New</a>
+</p>
+
+<div>
+    @if (_posts is not null)
+    {
+    @foreach (var post in _posts)
+    {
+        <ul>
+            <li>title: @post.Title</li>
+            <li>content: @post.Content</li>
+            <li>created: @post.CreatedAt</li>
+            <li>updated: @post.UpdatedAt</li>
+            <li>upvotes: @post.Upvotes</li>
+            <li>downvotes: @post.Downvotes</li>
+            <li>edited: @post.IsEdited</li>
+            <li>tags: @post.Tags</li>
+            <li>authorId: @post.AuthorId</li>
+        </ul>
+    }}
+</div>
+
+@code {
+    private List<Post> _posts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<Post> posts = await ForumPostService.GetAllAsync();
+        if (posts is not null) {
+            _posts = posts;
+        }
+    }
+
+    public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+}

@@ -15,19 +15,19 @@ public class ForumCommentService : IForumCommentService
   public async Task<List<Comment>> GetCommentsFromPost(Post Post)
   {
     using var context = _dbContextFactory.CreateDbContext();
-    List<Comment> comments = await context.Comment.Where(c => c.Post == Post).ToListAsync();
+    List<Comment> comments = await context.Comments.Where(c => c.Post == Post).ToListAsync();
     return comments;
   }
   public async Task Create(Comment Comment)
   {
     using var context = _dbContextFactory.CreateDbContext();
-    context.Comment.Add(Comment);
+    context.Comments.Add(Comment);
     await context.SaveChangesAsync();
   }
   public async Task Delete(Comment Comment)
   {
     using var context = _dbContextFactory.CreateDbContext();
-    context.Comment.Remove(Comment);
+    context.Comments.Remove(Comment);
     await context.SaveChangesAsync();
   }
 }

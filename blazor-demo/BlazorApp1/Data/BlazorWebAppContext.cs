@@ -14,10 +14,10 @@ namespace BlazorWebApp.Data
         {
         }
 
-        public DbSet<Movie> Movie { get; set; } = default!;
-        public DbSet<UserProfile> UserProfile { get; set; } = default!;
-        public DbSet<Post> Post { get; set; } = default!;
-        public DbSet<Comment> Comment { get; set; } = default!;
+        public DbSet<Movie> Movies { get; set; } = default!;
+        public DbSet<UserProfile> UserProfiles { get; set; } = default!;
+        public DbSet<Post> Posts { get; set; } = default!;
+        public DbSet<Comment> Comments { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

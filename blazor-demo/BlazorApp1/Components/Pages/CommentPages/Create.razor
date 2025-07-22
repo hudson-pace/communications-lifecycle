@@ -73,7 +73,7 @@
     private async Task AddComment()
     {
         using var context = DbFactory.CreateDbContext();
-        context.Comment.Add(Comment);
+        context.Comments.Add(Comment);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/comments");
     }
