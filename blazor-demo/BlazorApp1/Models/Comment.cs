@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 
 namespace BlazorApp1.Models;
 
@@ -12,15 +13,14 @@ public class Comment
 
   public int Upvotes { get; set; }
   public int Downvotes { get; set; }
-
   public bool IsEdited { get; set; }
 
   // Author relationship
   public int? AuthorId { get; set; }
-  public UserProfile Author { get; set; } = null!;
+  public UserProfile? Author { get; set; }
 
-  // Post relationship
-  public int? PostId { get; set; }
+  public int PostId { get; set; }
   public Post Post { get; set; } = null!;
 
+  public int? parentCommentId { get; set; }
 }

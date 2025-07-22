@@ -15,7 +15,9 @@ public class ForumPostService : IForumPostService
   public async Task<List<Post>> GetAllAsync()
   {
     using var context = _dbContextFactory.CreateDbContext();
-    List<Post> posts = await context.Posts.ToListAsync();
+    List<Post> posts = await context.Posts
+    .Include(p => p.Author)
+    .ToListAsync();
     return posts;
   }
   public async Task<Post?> GetOneAsync(int postId)

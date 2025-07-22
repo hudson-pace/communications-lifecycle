@@ -1,0 +1,23 @@
+@page "/forum/posts/p/{postId:int}"
+@using BlazorApp1.Services
+@using BlazorApp1.Models
+
+@inject IForumPostService ForumPostService
+
+<PageTitle>Post</PageTitle>
+
+<h1>Post</h1>
+
+
+@code {
+  private Post? _post;
+
+  [Parameter]
+  public int postId { get; set; }
+  protected override async Task OnInitializedAsync()
+    {
+      _post = await ForumPostService.GetOneAsync(postId);
+    }
+
+    public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+}
