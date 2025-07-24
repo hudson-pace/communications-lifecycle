@@ -48,14 +48,15 @@ public class ForumPostService : IForumPostService
 
   private async Task<Post> GetPostFromPostCreateDto(PostCreateDto PostCreateDto)
   {
+    using var context = _dbContextFactory.CreateDbContext();
+    
     Post Post = new()
     {
       Title = PostCreateDto.Title,
       Content = PostCreateDto.Content,
       PostTags = new List<PostTag>(),
+      AuthorId = PostCreateDto.AuthorId,
     };
-
-    using var context = _dbContextFactory.CreateDbContext();
 
     foreach (string postTag in PostCreateDto.PostTags)
     {

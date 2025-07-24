@@ -7,6 +7,7 @@ services:
       - ./BlazorApp1/Components:/App/BlazorApp1/Components
       - ./BlazorApp1/Controllers:/App/BlazorApp1/Controllers
       - ./BlazorApp1/Services:/App/BlazorApp1/Services
+      - ./BlazorApp1/DTO:/App/BlazorApp1/DTO
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=true
       - DOTNET_WATCH_RESTART_ON_RUDE=1

@@ -7,6 +7,7 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<BlazorWebApp.Data.BlazorWebAppContext> DbFactory
 @inject IForumPostService ForumPostService
+@rendermode InteractiveServer
 
 <PageTitle>Forum</PageTitle>
 
@@ -15,6 +16,10 @@
 <p>
     <a href="forum/posts/create">Create New</a>
 </p>
+<p>Posts: @_postCount</p>
+<p>Comments: @_commentCount</p>
+<p>PostTags: @_postTagCount</p>
+<p>Tags: @_tagCount</p>
 
 <div class="container">
     @foreach (var post in _posts)
@@ -27,6 +32,7 @@
             <div class="lower-row">
                 <div class="vote-arrow vote-arrow-down"></div>
                 @(post.Upvotes - post.Downvotes) votes by @(post.Author is not null ? post.Author.UserProfileId : "[deleted]") | <a href="forum/posts/p/@post.Id">comments</a> | @post.CreatedAt
+                | <button type="button" @onclick="() => DeletePost(post)">X</button>
             </div>
         </div>
     }
@@ -34,6 +40,10 @@
 
 @code {
     private List<Post> _posts = new();
+    private int _postCount = 0;
+    private int _commentCount = 0;
+    private int _postTagCount = 0;
+    private int _tagCount = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,7 +51,19 @@
         if (posts is not null) {
             _posts = posts;
         }
+
+        var context = DbFactory.CreateDbContext();
+        _postCount = await context.Posts.CountAsync();
+        _commentCount = await context.Comments.CountAsync();
+        _postTagCount = await context.PostTags.CountAsync();
+        _tagCount = await context.Tags.CountAsync();
+
     }
 
     public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+
+    public async Task DeletePost (Post Post)
+    {
+        await ForumPostService.Delete(Post);
+    }
 }

@@ -14,4 +14,5 @@ public class PostCreateDto
 
   [Required(ErrorMessage = "PostTags is required")]
   public List<string> PostTags { get; set; } = new List<string>();
+  public int AuthorId { get; set; }
 }
