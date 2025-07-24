@@ -67,8 +67,8 @@ public class ForumPostService : IForumPostService
         };
       PostTag PostTag = new PostTag
       {
-        Post = Post,
-        Tag = Tag,
+        PostId = Post.Id,
+        TagId = Tag.Id,
       };
       Post.PostTags.Add(PostTag);
     };
