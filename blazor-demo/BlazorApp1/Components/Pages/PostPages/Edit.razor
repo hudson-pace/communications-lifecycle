@@ -58,18 +58,6 @@ else
                     <InputCheckbox id="isedited" @bind-Value="Post.IsEdited" class="form-check-input" />
                     <ValidationMessage For="() => Post.IsEdited" class="text-danger" />
                 </div>
-                @*
-                <div class="mb-3">
-                    <label for="tags" class="form-label">Tags:</label>
-                    <InputText id="tags" @bind-Value="Post.Tags" class="form-control" />
-                    <ValidationMessage For="() => Post.Tags" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="authorid" class="form-label">AuthorId:</label>
-                    <InputText id="authorid" @bind-Value="Post.AuthorId" class="form-control" />
-                    <ValidationMessage For="() => Post.AuthorId" class="text-danger" />
-                </div>
-                *@
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
         </div>

@@ -1,4 +1,5 @@
 using System;
+using BlazorApp1.DTO;
 using BlazorApp1.Models;
 using BlazorWebApp.Data;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +17,26 @@ public class ForumPostService : IForumPostService
   {
     using var context = _dbContextFactory.CreateDbContext();
     List<Post> posts = await context.Posts
-    .Include(p => p.Author)
-    .ToListAsync();
+      .AsNoTracking()
+      .Include(p => p.Author)
+      .ToListAsync();
     return posts;
   }
   public async Task<Post?> GetOneAsync(int postId)
   {
     using var context = _dbContextFactory.CreateDbContext();
-    Post? post = await context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+    Post? post = await context.Posts
+      .AsNoTracking()
+      .Include(p => p.PostTags)
+      .ThenInclude(pt => pt.Tag)
+      .FirstOrDefaultAsync(p => p.Id == postId);
     return post;
   }
-  public async Task Create(Post Post)
+  public async Task Create(PostCreateDto PostCreateDto)
   {
     using var context = _dbContextFactory.CreateDbContext();
-    context.Posts.Add(Post);
+    Post post = await GetPostFromPostCreateDto(PostCreateDto);
+    context.Posts.Add(post);
     await context.SaveChangesAsync();
   }
   public async Task Delete(Post Post)
@@ -37,5 +44,33 @@ public class ForumPostService : IForumPostService
     using var context = _dbContextFactory.CreateDbContext();
     context.Posts.Remove(Post!);
     await context.SaveChangesAsync();
+  }
+
+  private async Task<Post> GetPostFromPostCreateDto(PostCreateDto PostCreateDto)
+  {
+    Post Post = new()
+    {
+      Title = PostCreateDto.Title,
+      Content = PostCreateDto.Content,
+      PostTags = new List<PostTag>(),
+    };
+
+    using var context = _dbContextFactory.CreateDbContext();
+
+    foreach (string postTag in PostCreateDto.PostTags)
+    {
+      Tag? Tag = await context.Tags.FirstOrDefaultAsync(t => t.Name == postTag);
+      Tag ??= new Tag
+        {
+          Name = postTag
+        };
+      PostTag PostTag = new PostTag
+      {
+        Post = Post,
+        Tag = Tag,
+      };
+      Post.PostTags.Add(PostTag);
+    };
+    return Post;
   }
 }

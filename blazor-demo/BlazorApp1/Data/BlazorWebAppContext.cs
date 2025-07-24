@@ -18,6 +18,8 @@ namespace BlazorWebApp.Data
         public DbSet<UserProfile> UserProfiles { get; set; } = default!;
         public DbSet<Post> Posts { get; set; } = default!;
         public DbSet<Comment> Comments { get; set; } = default!;
+        public DbSet<Tag> Tags { get; set; } = default!;
+        public DbSet<PostTag> PostTags { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -8,15 +8,27 @@
 
 <h1>Post</h1>
 
+@if (_post is not null)
+{
+  <p>Title: @_post.Title</p>
+  <p>Content: @_post.Content</p>
+  <p>Tags: @_tagString</p>
+}
+
 
 @code {
   private Post? _post;
+  private string _tagString;
 
   [Parameter]
   public int postId { get; set; }
   protected override async Task OnInitializedAsync()
     {
       _post = await ForumPostService.GetOneAsync(postId);
+      _tagString = "";
+      _post.PostTags.ToList().ForEach(pt => {
+        _tagString += pt.Tag.Name + ", ";
+      });
     }
 
     public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;

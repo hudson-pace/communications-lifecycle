@@ -7,8 +7,6 @@ namespace BlazorApp1.Services;
 
 public interface IForumPostService
 {
-  Task<List<Post>> GetAllAsync();
-  Task<Post?> GetOneAsync(int postId);
-  Task Create(PostCreateDto Post);
-  Task Delete(Post Post);
+  Task<Tag?> GetOneAsync(int tagId);
+  Task Create(TagCreateDto Tag);
 }

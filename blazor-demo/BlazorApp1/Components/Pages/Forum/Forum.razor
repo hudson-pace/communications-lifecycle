@@ -26,20 +26,8 @@
             </div>
             <div class="lower-row">
                 <div class="vote-arrow vote-arrow-down"></div>
-                @(post.Upvotes - post.Downvotes) votes by @(post.Author is not null ? post.Author.UserProfileId : "[deleted]") | <a href="forum/posts/@post.Id">comments</a> | @post.CreatedAt
+                @(post.Upvotes - post.Downvotes) votes by @(post.Author is not null ? post.Author.UserProfileId : "[deleted]") | <a href="forum/posts/p/@post.Id">comments</a> | @post.CreatedAt
             </div>
-            @*
-            <ul>
-                <li>title: @post.Title</li>
-                <li>content: @post.Content</li>
-                <li>created: @post.CreatedAt</li>
-                <li>updated: @post.UpdatedAt</li>
-                <li>upvotes: @post.Upvotes</li>
-                <li>downvotes: @post.Downvotes</li>
-                <li>edited: @post.IsEdited</li>
-                <li>tags: @post.Tags</li>
-                <li>authorId: @post.AuthorId</li>
-            </ul>*@
         </div>
     }
 </div>
