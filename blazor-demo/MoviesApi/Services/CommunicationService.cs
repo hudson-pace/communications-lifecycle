@@ -2,6 +2,7 @@ using System;
 using SharedModels.Models;
 
 using Microsoft.EntityFrameworkCore;
+using SharedModels.DTOs;
 
 namespace MoviesApi.Services;
 
@@ -17,9 +18,31 @@ public class CommunicationService : ICommunicationService
     List<Communication> communications = await _context.Communications.ToListAsync();
     return communications;
   }
-  public async Task<Communication?> GetCommunicationAsync(int id)
+  public async Task<CommunicationDto?> GetCommunicationAsync(int id)
   {
-    Communication? communication = await _context.Communications.FirstOrDefaultAsync(communication => communication.Id == id);
+    CommunicationDto? communication = await _context.Communications
+      .Where(c => c.Id == id)
+      .Select(c => new CommunicationDto
+      {
+        Id = c.Id,
+        Title = c.Title,
+        Type = new CommunicationTypeDto
+        {
+          Id = c.Type.Id,
+          Name = c.Type.Name,
+        },
+        StatusHistory = c.StatusHistory.Select(s => new CommunicationStatusChangeDto
+        {
+          Id = s.Id,
+          CreatedAt = s.CreatedAt,
+          Status = new CommunicationStatusDto
+          {
+            Id = s.Status.Id,
+            Description = s.Status.Description,
+          }
+        }).ToList()
+      })
+      .FirstOrDefaultAsync();
     return communication;
   }
   public async Task<Communication> CreateCommunicationAsync(Communication Communication)

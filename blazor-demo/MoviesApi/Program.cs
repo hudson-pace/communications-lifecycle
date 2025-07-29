@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<MoviesApiContext>(opt =>
     opt.UseInMemoryDatabase("Movies"));
+builder.Services.AddScoped<ICommunicationService, CommunicationService>();
 
 var app = builder.Build();
 
@@ -49,6 +50,16 @@ app.MapPost("/movies", async (Movie movie, MoviesApiContext context) =>
     context.Movies.Add(movie);
     await context.SaveChangesAsync();
     return Results.Created($" / movies /{movie.Id}", movie);
+});
+
+app.MapGet("/communications", async (ICommunicationService communicationService) =>
+{
+    Console.WriteLine("Getting Comms");
+    return await communicationService.GetAllCommunicationsAsync();
+});
+app.MapGet("/communications/{id}", async (ICommunicationService communicationService, int id) =>
+{
+    return await communicationService.GetCommunicationAsync(id);
 });
 
 using var scope = app.Services.CreateScope();
