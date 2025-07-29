@@ -4,7 +4,9 @@ services:
     image: movie-api-image
     ports:
       - "5075:8080"
-    build: .
+    build:
+      context: .
+      dockerfile: ./MoviesApi/Dockerfile
     entrypoint: ["dotnet", "MoviesApi.dll"]
 
   aspnet:
@@ -17,7 +19,9 @@ services:
       ConnectionStrings:BlazorWebAppContext: "Server=sql-server;Database=MyDb;User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True"
     ports:
       - "8000:8080"
-    build: .
+    build:
+      context: .
+      dockerfile: ./BlazorApp1/Dockerfile
     depends_on:
       sql-server:
         condition: service_healthy

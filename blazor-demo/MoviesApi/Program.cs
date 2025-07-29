@@ -1,6 +1,88 @@
 using Microsoft.EntityFrameworkCore;
 using SharedModels.Models;
 
+static async Task SeedDbAsync(IServiceProvider services)
+{
+    using var scope = services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<MoviesApiContext>();
+
+    CommunicationType EobType = new() { Name = "EOB" };
+    CommunicationType EopType = new() { Name = "EOP" };
+    CommunicationType IdCardType = new() { Name = "ID Card" };
+
+    context.CommunicationTypes.Add(EobType);
+    context.CommunicationTypes.Add(EopType);
+    context.CommunicationTypes.Add(IdCardType);
+    await context.SaveChangesAsync();
+
+    List<CommunicationStatusChange> statusHistory = [];
+
+    Communication Eob1 = new()
+    {
+        Title = "Eob 1",
+        Type = EobType,
+        StatusHistory = [
+            new CommunicationStatusChange {
+                Status = new CommunicationStatus {
+                    Type = EobType,
+                    Description = "Released",
+                }
+            },
+            new CommunicationStatusChange {
+                Status = new CommunicationStatus {
+                    Type = EobType,
+                    Description = "Printed",
+                }
+            }
+        ],
+    };
+    Communication Eop1 = new()
+    {
+        Title = "Eop 1",
+        Type = EopType,
+        StatusHistory = [
+            new CommunicationStatusChange {
+                Status = new CommunicationStatus {
+                    Type = EopType,
+                    Description = "Released",
+                }
+            },
+            new CommunicationStatusChange {
+                Status = new CommunicationStatus {
+                    Type = EopType,
+                    Description = "Delivered",
+                }
+            }
+        ],
+    };
+    Communication IdCard1 = new()
+    {
+        Title = "ID Card 1",
+        Type = IdCardType,
+        StatusHistory = [
+            new CommunicationStatusChange {
+                Status = new CommunicationStatus {
+                    Type = IdCardType,
+                    Description = "QueuedForPrinting",
+                }
+            },
+            new CommunicationStatusChange {
+                Status = new CommunicationStatus {
+                    Type = IdCardType,
+                    Description = "Printed",
+                }
+            }
+        ],
+    };
+
+    context.Communications.Add(Eob1);
+    context.Communications.Add(Eop1);
+    context.Communications.Add(IdCard1);
+    await context.SaveChangesAsync();
+
+    Console.WriteLine("More Seed to Sow");
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -49,8 +131,7 @@ app.MapPost("/movies", async (Movie movie, MoviesApiContext context) =>
     await context.SaveChangesAsync();
     return Results.Created($" / movies /{ movie.Id}", movie);
 });
-
-
+await SeedDbAsync(app.Services);
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

@@ -12,5 +12,5 @@ public class Communication
   [Required(ErrorMessage = "Type is required.")]
   public CommunicationType Type { get; set; } = null!;
 
-  public ICollection<CommunicationStatus> StatusHistory { get; set; } = new List<CommunicationStatus>();
+  public ICollection<CommunicationStatusChange> StatusHistory { get; set; } = new List<CommunicationStatusChange>();
 }

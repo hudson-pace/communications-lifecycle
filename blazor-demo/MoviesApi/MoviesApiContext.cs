@@ -9,5 +9,5 @@ public class MoviesApiContext : DbContext
   public DbSet<Communication> Communications { get; set; }
   public DbSet<CommunicationStatus> CommunicationStatuses { get; set; }
   public DbSet<CommunicationStatusChange> CommunicationStatusChanges { get; set; }
-  public DbSet<CommunicationType> communicationTypes { get; set; }
+  public DbSet<CommunicationType> CommunicationTypes { get; set; }
 }
