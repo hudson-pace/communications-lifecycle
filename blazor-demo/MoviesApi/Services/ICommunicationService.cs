@@ -7,7 +7,7 @@ namespace MoviesApi.Services;
 
 public interface ICommunicationService
 {
-  Task<List<Communication>> GetAllCommunicationsAsync();
+  Task<List<CommunicationDto>> GetAllCommunicationsAsync();
   Task<CommunicationDto?> GetCommunicationAsync(int id);
   Task<Communication> CreateCommunicationAsync(Communication Communication);
   Task<Communication> DeleteCommunicationAsync(Communication Communication);

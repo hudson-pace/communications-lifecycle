@@ -54,7 +54,6 @@ app.MapPost("/movies", async (Movie movie, MoviesApiContext context) =>
 
 app.MapGet("/communications", async (ICommunicationService communicationService) =>
 {
-    Console.WriteLine("Getting Comms");
     return await communicationService.GetAllCommunicationsAsync();
 });
 app.MapGet("/communications/{id}", async (ICommunicationService communicationService, int id) =>

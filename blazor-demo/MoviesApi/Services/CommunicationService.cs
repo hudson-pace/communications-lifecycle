@@ -13,9 +13,33 @@ public class CommunicationService : ICommunicationService
   {
     _context = context;
   }
-  public async Task<List<Communication>> GetAllCommunicationsAsync()
+  public async Task<List<CommunicationDto>> GetAllCommunicationsAsync()
   {
-    List<Communication> communications = await _context.Communications.ToListAsync();
+    List<CommunicationDto>? communications = await _context.Communications
+      .Select(c => new CommunicationDto
+      {
+        Id = c.Id,
+        Title = c.Title,
+        Type = new CommunicationTypeDto
+        {
+          Id = c.Type.Id,
+          Name = c.Type.Name,
+        },
+        StatusHistory = c.StatusHistory
+        .OrderBy(s => s.CreatedAt)
+        .Select(s => new CommunicationStatusChangeDto
+          {
+            Id = s.Id,
+            CreatedAt = s.CreatedAt,
+            Status = new CommunicationStatusDto
+            {
+              Id = s.Status.Id,
+              Description = s.Status.Description,
+            }
+          })
+        .ToList()
+      })
+      .ToListAsync();
     return communications;
   }
   public async Task<CommunicationDto?> GetCommunicationAsync(int id)
@@ -31,16 +55,19 @@ public class CommunicationService : ICommunicationService
           Id = c.Type.Id,
           Name = c.Type.Name,
         },
-        StatusHistory = c.StatusHistory.Select(s => new CommunicationStatusChangeDto
-        {
-          Id = s.Id,
-          CreatedAt = s.CreatedAt,
-          Status = new CommunicationStatusDto
+        StatusHistory = c.StatusHistory
+        .OrderBy(s => s.CreatedAt)
+        .Select(s => new CommunicationStatusChangeDto
           {
-            Id = s.Status.Id,
-            Description = s.Status.Description,
-          }
-        }).ToList()
+            Id = s.Id,
+            CreatedAt = s.CreatedAt,
+            Status = new CommunicationStatusDto
+            {
+              Id = s.Status.Id,
+              Description = s.Status.Description,
+            }
+          })
+        .ToList()
       })
       .FirstOrDefaultAsync();
     return communication;

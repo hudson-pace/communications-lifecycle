@@ -1,5 +1,7 @@
 using BlazorApp1.Models;
+using SharedModels.DTOs;
 namespace BlazorApp1.Services;
+
 public class MovieApiService
 {
   private readonly HttpClient _http;
@@ -15,5 +17,10 @@ public class MovieApiService
   {
     var response = await _http.PostAsJsonAsync("movies", movie);
     return await response.Content.ReadFromJsonAsync<Movie>();
+  }
+
+  public async Task<List<CommunicationDto>?> GetCommunicationsAsync()
+  {
+    return await _http.GetFromJsonAsync<List<CommunicationDto>>("communications");
   }
 }

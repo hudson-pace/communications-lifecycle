@@ -1,0 +1,36 @@
+@page "/communications"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BlazorApp1.Models
+@using BlazorWebApp.Data
+@using BlazorApp1.Services;
+@using SharedModels.DTOs;
+@implements IAsyncDisposable
+@inject MovieApiService MovieApiService
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="movies/create">Create New</a>
+</p>
+
+<ul>
+    @foreach (var communication in communications)
+    {
+        <li>@communication.Id, @communication.Title, type: @communication.Type.Id, @communication.Type.Name, status: @communication.StatusHistory.ElementAt(0).Status.Description</li>
+    }
+</ul>
+
+@code {
+    private List<CommunicationDto> communications = new();
+    protected override async Task OnInitializedAsync()
+    {
+        List<CommunicationDto>? communicationList = await MovieApiService.GetCommunicationsAsync();
+        if (communicationList is not null) {
+            communications = communicationList;
+        }
+    }
+    public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+}
