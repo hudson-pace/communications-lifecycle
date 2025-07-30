@@ -5,18 +5,22 @@ EXPOSE 8081
 
 # copy everything
 COPY ./BlazorApp1/BlazorApp1.csproj ./BlazorApp1/BlazorApp1.csproj
-
-
+COPY ./SharedModels ./SharedModels
 # restore as distinct layers
 RUN dotnet restore ./BlazorApp1/BlazorApp1.csproj
 
-COPY ./BlazorApp1 ./BlazorApp1
+
 
 WORKDIR /App/BlazorApp1
 
 FROM dev AS build
 # build and publish as a release
+
+COPY ./BlazorApp1 ./BlazorApp1
+COPY ./SharedModels ./SharedModels
+
 RUN dotnet clean
+
 
 # already ran restore, so --no-restore
 RUN dotnet publish -c Release -o /App/out --no-restore
