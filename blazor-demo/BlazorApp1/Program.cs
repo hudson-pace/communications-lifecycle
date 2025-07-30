@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Okta.AspNetCore;
 using BlazorWebApp.Data;
 using BlazorApp1.Services;
+using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
@@ -51,6 +52,14 @@ builder.Services.ConfigureApplicationCookie(options =>
     ClientId = builder.Configuration.GetValue<string>("Okta:ClientId"),
     ClientSecret = builder.Configuration.GetValue<string>("Okta:ClientSecret"),
     Scope = new List<string> { "openid", "profile", "email" },
+});
+
+builder.Services.Configure<OpenIdConnectOptions>(OktaDefaults.MvcAuthenticationScheme, options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        RoleClaimType = "roles"
+    };
 });
 builder.Services.AddControllersWithViews();
 
