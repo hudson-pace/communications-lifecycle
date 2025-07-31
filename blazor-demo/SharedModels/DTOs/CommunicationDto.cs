@@ -8,6 +8,7 @@ public class CommunicationDto
 
   public string Title { get; set; } = null!;
 
-  public CommunicationTypeDto Type { get; set; } = null!;
-  public List<CommunicationStatusChangeDto> StatusHistory { get; set; } = null!;
+  public int CommunicationTypeId { get; set; }
+  public CommunicationTypeDto? Type { get; set; } = null!;
+  public List<CommunicationStatusChangeDto>? StatusHistory { get; set; } = null!;
 }

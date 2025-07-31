@@ -28,15 +28,15 @@ public class CommunicationService : ICommunicationService
         StatusHistory = c.StatusHistory
         .OrderBy(s => s.CreatedAt)
         .Select(s => new CommunicationStatusChangeDto
+        {
+          Id = s.Id,
+          CreatedAt = s.CreatedAt,
+          Status = new CommunicationStatusDto
           {
-            Id = s.Id,
-            CreatedAt = s.CreatedAt,
-            Status = new CommunicationStatusDto
-            {
-              Id = s.Status.Id,
-              Description = s.Status.Description,
-            }
-          })
+            Id = s.Status.Id,
+            Description = s.Status.Description,
+          }
+        })
         .ToList()
       })
       .ToListAsync();
@@ -58,15 +58,15 @@ public class CommunicationService : ICommunicationService
         StatusHistory = c.StatusHistory
         .OrderBy(s => s.CreatedAt)
         .Select(s => new CommunicationStatusChangeDto
+        {
+          Id = s.Id,
+          CreatedAt = s.CreatedAt,
+          Status = new CommunicationStatusDto
           {
-            Id = s.Id,
-            CreatedAt = s.CreatedAt,
-            Status = new CommunicationStatusDto
-            {
-              Id = s.Status.Id,
-              Description = s.Status.Description,
-            }
-          })
+            Id = s.Status.Id,
+            Description = s.Status.Description,
+          }
+        })
         .ToList()
       })
       .FirstOrDefaultAsync();
@@ -84,4 +84,33 @@ public class CommunicationService : ICommunicationService
     await _context.SaveChangesAsync();
     return Communication;
   }
+
+  public async Task<List<CommunicationTypeDto>> GetAllCommunicationTypesAsync()
+  {
+    List<CommunicationTypeDto>? communicationType = await _context.CommunicationTypes
+      .Select(c => new CommunicationTypeDto
+      {
+        Id = c.Id,
+        Name = c.Name,
+      })
+      .ToListAsync();
+    return communicationType;
+  }
+  public async Task<CommunicationTypeDto?> GetCommunicationTypeAsync(int id)
+  {
+    CommunicationTypeDto? communicationType = await _context.CommunicationTypes
+      .Where(c => c.Id == id)
+      .Select(c => new CommunicationTypeDto
+      {
+        Id = c.Id,
+        Name = c.Name,
+      })
+      .FirstOrDefaultAsync();
+    return communicationType;
+  }
+  public async Task CreateCommunicationTypeAsync(CommunicationTypeDto Communication)
+  {
+  }
 }
+
+

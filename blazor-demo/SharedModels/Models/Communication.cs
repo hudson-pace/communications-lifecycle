@@ -9,6 +9,7 @@ public class Communication
   [Required(ErrorMessage = "Title is required.")] 
   public string Title { get; set; } = null!;
 
+  public int CommunicationTypeId { get; set; }
   [Required(ErrorMessage = "Type is required.")]
   public CommunicationType Type { get; set; } = null!;
 

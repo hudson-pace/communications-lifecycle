@@ -8,6 +8,7 @@ public class CommunicationStatus
 {
   public int Id { get; set; }
 
+  public int CommunicationTypeId { get; set; }
   [Required(ErrorMessage = "Type is required.")]
   public CommunicationType Type { get; set; } = null!;
 
