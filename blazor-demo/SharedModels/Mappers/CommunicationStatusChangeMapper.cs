@@ -6,7 +6,7 @@ public static class CommunicationStatusChangeMapper
   public static CommunicationStatusChangeDto ToDto(this CommunicationStatusChange communicationStatusChange) => new CommunicationStatusChangeDto
   {
     Id = communicationStatusChange.Id,
-    CommunicationId = communicationStatusChange.Communication.Id,
+    CommunicationId = communicationStatusChange.CommunicationId,
     CommunicationStatusId = communicationStatusChange.Status.Id,
     Status = communicationStatusChange.Status?.ToDto(),
     CreatedAt = communicationStatusChange.CreatedAt,

@@ -8,9 +8,8 @@ public class CommunicationStatusChange
 {
   public int Id { get; set; }
 
+  [Required(ErrorMessage = "CommunicationId is required.")]
   public int CommunicationId { get; set; }
-  [Required(ErrorMessage = "Communication is required.")]
-  public Communication Communication { get; set; } = null!;
 
   public int CommunicationStatusId { get; set; }
   [Required(ErrorMessage = "Status is required.")]
