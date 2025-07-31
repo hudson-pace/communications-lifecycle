@@ -61,6 +61,15 @@ app.MapGet("/communications/{id}", async (ICommunicationService communicationSer
     return await communicationService.GetCommunicationAsync(id);
 });
 
+app.MapGet("/CommunicationTypes", async (ICommunicationService communicationService) =>
+{
+    return await communicationService.GetAllCommunicationTypesAsync();
+});
+app.MapGet("/CommunicationTypes/{id}", async (ICommunicationService communicationService, int id) =>
+{
+    return await communicationService.GetCommunicationTypeAsync(id);
+});
+
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<MoviesApiContext>();
 SeedDb s = new();

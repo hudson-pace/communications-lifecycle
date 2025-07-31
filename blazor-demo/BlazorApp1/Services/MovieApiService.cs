@@ -23,4 +23,9 @@ public class MovieApiService
   {
     return await _http.GetFromJsonAsync<List<CommunicationDto>>("communications");
   }
+
+  public async Task<List<CommunicationTypeDto>?> GetCommunicationTypesAsync()
+  {
+    return await _http.GetFromJsonAsync<List<CommunicationTypeDto>>("CommunicationTypes");
+  }
 }
