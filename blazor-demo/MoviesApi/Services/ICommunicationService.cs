@@ -9,10 +9,13 @@ public interface ICommunicationService
 {
   Task<List<CommunicationDto>> GetAllCommunicationsAsync();
   Task<CommunicationDto?> GetCommunicationAsync(int id);
-  Task<Communication> CreateCommunicationAsync(Communication Communication);
+  Task<Communication> CreateCommunicationAsync(CommunicationDto CommunicationDto);
   Task<Communication> DeleteCommunicationAsync(Communication Communication);
 
   Task<List<CommunicationTypeDto>> GetAllCommunicationTypesAsync();
   Task<CommunicationTypeDto?> GetCommunicationTypeAsync(int id);
-  Task CreateCommunicationTypeAsync(CommunicationTypeDto Communication);
+  Task<CommunicationType> CreateCommunicationTypeAsync(CommunicationTypeDto CommunicationTypeDto);
+  Task<CommunicationType> UpdateCommunicationTypeAsync(CommunicationTypeDto CommunicationTypeDto);
+
+  Task<CommunicationStatusChange> CreateCommunicationStatusChangeAsync(CommunicationStatusChangeDto CommunicationStatusChangeDto);
 }

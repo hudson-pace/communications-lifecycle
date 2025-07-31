@@ -72,8 +72,9 @@ public class CommunicationService : ICommunicationService
       .FirstOrDefaultAsync();
     return communication;
   }
-  public async Task<Communication> CreateCommunicationAsync(Communication Communication)
+  public async Task<Communication> CreateCommunicationAsync(CommunicationDto CommunicationDto)
   {
+    Communication Communication = CommunicationDto.ToEntity();
     _context.Communications.Add(Communication); ;
     await _context.SaveChangesAsync();
     return Communication;
@@ -108,8 +109,27 @@ public class CommunicationService : ICommunicationService
       .FirstOrDefaultAsync();
     return communicationType;
   }
-  public async Task CreateCommunicationTypeAsync(CommunicationTypeDto Communication)
+  public async Task<CommunicationType> CreateCommunicationTypeAsync(CommunicationTypeDto CommunicationTypeDto)
   {
+    CommunicationType communicationType = CommunicationTypeDto.ToEntity();
+    _context.CommunicationTypes.Add(communicationType);
+    await _context.SaveChangesAsync();
+    return communicationType;
+  }
+  public async Task<CommunicationType> UpdateCommunicationTypeAsync(CommunicationTypeDto CommunicationTypeDto)
+  {
+    CommunicationType communicationType = CommunicationTypeDto.ToEntity();
+    _context.CommunicationTypes.Update(communicationType);
+    await _context.SaveChangesAsync();
+    return communicationType;
+  }
+
+  public async Task<CommunicationStatusChange> CreateCommunicationStatusChangeAsync(CommunicationStatusChangeDto CommunicationStatusChangeDto)
+  {
+    CommunicationStatusChange communicationStatusChange = CommunicationStatusChangeDto.ToEntity();
+    _context.CommunicationStatusChanges.Add(communicationStatusChange);
+    await _context.SaveChangesAsync();
+    return communicationStatusChange;
   }
 }
 

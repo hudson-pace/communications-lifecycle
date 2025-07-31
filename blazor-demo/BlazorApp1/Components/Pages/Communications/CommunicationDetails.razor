@@ -1,0 +1,41 @@
+@page "/communications/{communicationId:int}"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.QuickGrid;
+@using BlazorApp1.Models
+@using BlazorWebApp.Data
+@using BlazorApp1.Services;
+@using SharedModels.DTOs;
+@implements IAsyncDisposable
+@inject MovieApiService MovieApiService
+
+<PageTitle>Communication</PageTitle>
+
+<h1>Communication</h1>
+
+@if (communication is not null)
+{
+  @if (statusHistory is not null)
+  {
+    <h2>Communication Status History</h2>
+    <QuickGrid TGridItem="CommunicationStatusChangeDto" Items="@statusHistory" Class="table table-striped">
+        <PropertyColumn Title="Description" Property="statusChange => statusChange.Status.Description" />
+        <PropertyColumn Title="Created At" Property="statusChange => statusChange.CreatedAt" />
+    </QuickGrid>
+  }
+} else {
+    <Spinner />
+}
+
+@code {
+    private CommunicationDto? communication;
+    private IQueryable<CommunicationStatusChangeDto>? statusHistory;
+    [Parameter]
+    public int communicationId { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+      communication = await MovieApiService.GetCommunicationAsync(communicationId);
+      statusHistory = communication?.StatusHistory?.AsQueryable();
+    }
+    public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+}

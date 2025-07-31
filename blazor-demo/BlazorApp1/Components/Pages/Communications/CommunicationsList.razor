@@ -20,7 +20,9 @@
 @if (communications is not null)
 {
     <QuickGrid TGridItem="CommunicationDto" Items="@communications" Class="table table-striped">
-        <PropertyColumn Title="Name" Property="communication => communication.Title" />
+        <TemplateColumn Title="Name" Context="communication">
+            <a href=@($"/communications/{communication.Id}")>@communication.Title</a>
+        </TemplateColumn>
         <PropertyColumn Title="Type" Property="communication => communication.Type.Name" />
         <PropertyColumn Title="Status" Property="communication => communication.StatusHistory.ElementAt(0).Status.Description" />
     </QuickGrid>

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MoviesApi.Services;
+using SharedModels.DTOs;
 using SharedModels.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<MoviesApiContext>(opt =>
     opt.UseInMemoryDatabase("Movies"));
 builder.Services.AddScoped<ICommunicationService, CommunicationService>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -20,6 +22,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapControllers();
 
 var summaries = new[]
 {
@@ -52,23 +55,11 @@ app.MapPost("/movies", async (Movie movie, MoviesApiContext context) =>
     return Results.Created($" / movies /{movie.Id}", movie);
 });
 
-app.MapGet("/communications", async (ICommunicationService communicationService) =>
-{
-    return await communicationService.GetAllCommunicationsAsync();
-});
-app.MapGet("/communications/{id}", async (ICommunicationService communicationService, int id) =>
-{
-    return await communicationService.GetCommunicationAsync(id);
-});
 
-app.MapGet("/CommunicationTypes", async (ICommunicationService communicationService) =>
-{
-    return await communicationService.GetAllCommunicationTypesAsync();
-});
-app.MapGet("/CommunicationTypes/{id}", async (ICommunicationService communicationService, int id) =>
-{
-    return await communicationService.GetCommunicationTypeAsync(id);
-});
+
+
+
+
 
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<MoviesApiContext>();
