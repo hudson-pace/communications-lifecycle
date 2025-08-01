@@ -23,7 +23,10 @@
             <a href=@($"/communications/communication/{communication.Id}")>@communication.Title</a>
         </TemplateColumn>
         <PropertyColumn Title="Type" Property="communication => communication.Type.Name" />
-        <PropertyColumn Title="Status" Property="communication => communication.StatusHistory.ElementAt(0).Status.Description" />
+        <PropertyColumn Title="Status" Property="@(communication =>
+            communication.StatusHistory.Count > 0 ?
+            communication.StatusHistory.ElementAt(0).Status.Description :
+            "No Status Hisory Yet.")"/>
     </QuickGrid>
 } else {
     <Spinner />
