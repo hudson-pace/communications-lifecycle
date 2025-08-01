@@ -1,16 +1,21 @@
 version: '2.4'
 services:
-  movie-api:
-    image: movie-api-image
+  api:
+    image: api-image
     ports:
       - "5075:8080"
     build:
-      context: .
-      dockerfile: ./CommLifecycle.Api/Dockerfile
+      context: ./CommLifecycle.Api
+      dockerfile: Dockerfile
     entrypoint: ["dotnet", "CommLifecycle.Api.dll"]
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      sql-server:
+        condition: service_healthy
 
-  aspnet:
-    image: counter-image
+  web:
+    image: web-image
     environment:
       Okta:OktaDomain: ${OKTA_DOMAIN}
       Okta:ClientId: ${OKTA_CLIENT_ID}
@@ -19,24 +24,21 @@ services:
     ports:
       - "8000:8080"
     build:
-      context: .
-      dockerfile: ./CommLifecycle.Web/Dockerfile
-    depends_on:
-      sql-server:
-        condition: service_healthy
+      context: ./CommLifecycle.Web
+      dockerfile: Dockerfile
     entrypoint: ["dotnet", "CommLifecycle.Web.dll"]
   sql-server:
     image: mcr.microsoft.com/mssql/server:2022-CU13-ubuntu-20.04
     container_name: sql-server-container
     environment:
-      SA_PASSWORD: Password1
+      SA_PASSWORD: ${DB_PASSWORD}
       ACCEPT_EULA: Y
     ports:
       - "1433:1433"
     volumes:
       - db-data:/var/opt/mssql
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -C -S localhost -U sa -P Password1 -Q \"SELECT 1\" -b -o /dev/null || exit 1"]
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -C -S localhost -U sa -P ${DB_PASSWORD} -Q \"SELECT 1\" -b -o /dev/null || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5

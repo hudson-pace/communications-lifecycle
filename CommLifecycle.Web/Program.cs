@@ -19,7 +19,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<MovieApiService>();
 builder.Services.AddHttpClient("CommLifecycle.Api", client =>
 {
-    client.BaseAddress = new Uri("http://movie-api:8080");
+    client.BaseAddress = new Uri("http://api:8080");
 });
 
 builder.Services.AddHttpContextAccessor();

@@ -2,11 +2,9 @@ using SharedModels.Models;
 
 namespace CommLifecycle.Api.Services;
 
-public class SeedDb
+public static class SeedDb
 {
-    public SeedDb()
-    { }
-    public async Task Seed(CommLifecycleApiContext context)
+    public static async Task Seed(CommLifecycleApiContext context)
     {
         CommunicationType EobType = new()
         {

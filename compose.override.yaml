@@ -1,9 +1,12 @@
 version: '2.4'
 services:
-  aspnet:
+  web:
     entrypoint: ["dotnet", "watch", "run", "--urls", "http://*:8080", "--non-interactive"]
     volumes:
-      - ./CommLifecycle.Web:/App/CommLifecycle.Web
+      - ./CommLifecycle.Web/Components:/App/CommLifecycle.Web/Components
+      - ./CommLifecycle.Web/Controllers:/App/CommLifecycle.Web/Controllers
+      - ./CommLifecycle.Web/Services:/App/CommLifecycle.Web/Services
+      - ./CommLifecycle.Web/wwwroot:/App/CommLifecycle.Web/wwwroot
       - ./SharedModels/DTOs:/App/SharedModels/DTOs
       - ./SharedModels/Models:/App/SharedModels/Models
       - ./SharedModels/Mappers:/App/SharedModels/Mappers

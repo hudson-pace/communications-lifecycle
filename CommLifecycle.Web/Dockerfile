@@ -4,7 +4,7 @@ EXPOSE 8080
 EXPOSE 8081
 
 # copy everything
-COPY ./CommLifecycle.Web/CommLifecycle.Web.csproj ./CommLifecycle.Web/CommLifecycle.Web.csproj
+COPY ./CommLifecycle.Web ./CommLifecycle.Web
 COPY ./SharedModels ./SharedModels
 # restore as distinct layers
 RUN dotnet restore ./CommLifecycle.Web/CommLifecycle.Web.csproj
