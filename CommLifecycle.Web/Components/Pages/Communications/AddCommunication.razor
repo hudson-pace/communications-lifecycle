@@ -49,7 +49,6 @@
 
     private async Task HandleValidSubmit()
     {
-        Console.WriteLine($"communication title is {_communication.Title} and type id is {_communication.CommunicationTypeId} and regular ol' id is {_communication.Id}");
         await _movieApiService.CreateCommunicationAsync(_communication);
         _navigationManager.NavigateTo("/Communications");
     }
