@@ -12,7 +12,7 @@ public static class CommunicationMapper
   };
   public static Communication ToEntity(this CommunicationDto communicationDto) => new Communication()
   {
-    Id = communicationDto.Id,
+    Id = communicationDto.Id ?? 0,
     Title = communicationDto.Title,
     Type = communicationDto.Type?.ToEntity()!,
     StatusHistory = communicationDto.StatusHistory?.Select(statusChange => statusChange.ToEntity()).ToList()!,

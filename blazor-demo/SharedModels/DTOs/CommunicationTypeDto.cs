@@ -10,5 +10,5 @@ public class CommunicationTypeDto
 
   public string Name { get; set; } = null!;
 
-  public List<CommunicationStatusDto>? Statuses { get; set; } = [];
+  public List<CommunicationStatusDto> Statuses { get; set; } = [];
 }

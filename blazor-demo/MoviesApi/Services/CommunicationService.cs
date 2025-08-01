@@ -3,15 +3,18 @@ using SharedModels.Models;
 
 using Microsoft.EntityFrameworkCore;
 using SharedModels.DTOs;
+using System.Diagnostics;
 
 namespace MoviesApi.Services;
 
 public class CommunicationService : ICommunicationService
 {
   private readonly MoviesApiContext _context;
-  public CommunicationService(MoviesApiContext context)
+  private readonly ILogger<CommunicationService> _logger;
+  public CommunicationService(MoviesApiContext context, ILogger<CommunicationService> logger)
   {
     _context = context;
+    _logger = logger;
   }
   public async Task<List<CommunicationDto>> GetAllCommunicationsAsync()
   {
@@ -75,7 +78,7 @@ public class CommunicationService : ICommunicationService
   public async Task<Communication> CreateCommunicationAsync(CommunicationDto CommunicationDto)
   {
     Communication Communication = CommunicationDto.ToEntity();
-    _context.Communications.Add(Communication); ;
+    _context.Communications.Add(Communication);
     await _context.SaveChangesAsync();
     return Communication;
   }
@@ -84,7 +87,7 @@ public class CommunicationService : ICommunicationService
     _context.Communications.Remove(Communication);
     await _context.SaveChangesAsync();
     return Communication;
-  }
+    }
 
   public async Task<List<CommunicationTypeDto>> GetAllCommunicationTypesAsync()
   {

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MoviesApi.Services;
 using SharedModels.DTOs;
@@ -10,10 +11,12 @@ namespace MoviesApi.Controllers;
 public class CommunicationsController : ControllerBase
 {
   private readonly ICommunicationService _communicationService;
+  private readonly ILogger<CommunicationsController> _logger;
 
-  public CommunicationsController(ICommunicationService communicationService)
+  public CommunicationsController(ICommunicationService communicationService, ILogger<CommunicationsController> logger)
   {
     _communicationService = communicationService;
+    _logger = logger;
   }
 
   [HttpGet]

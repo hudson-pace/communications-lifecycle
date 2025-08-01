@@ -3,8 +3,9 @@
 @using BlazorApp1.Services
 @inject MovieApiService _movieApiService
 @inject NavigationManager _navigationManager
+@rendermode InteractiveServer
 
-<EditForm Model="@_communication" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="@_communication" OnValidSubmit="HandleValidSubmit" FormName="create" Enhance>
     <DataAnnotationsValidator />
     <ValidationSummary />
 
@@ -24,6 +25,9 @@
         </InputSelect>
     </div>
 
+    <p>debug: IsNull = @(_communication is null)</p>
+    <p>debug: Title = @_communication.Title</p>
+    <p>debug: Type ID = @_communication.CommunicationTypeId</p>
     <button class="btn btn-primary" type="submit">Add Communication</button>
 </EditForm>
 
@@ -39,9 +43,8 @@
 
     private async Task HandleValidSubmit()
     {
+        Console.WriteLine($"communication title is {_communication.Title} and type id is {_communication.CommunicationTypeId} and regular ol' id is {_communication.Id}");
         await _movieApiService.CreateCommunicationAsync(_communication);
-        // Optionally reset or navigate
-        // _communication = new();
         _navigationManager.NavigateTo("/Communications");
     }
 }

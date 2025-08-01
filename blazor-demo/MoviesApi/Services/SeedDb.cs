@@ -80,7 +80,5 @@ public class SeedDb
         context.Communications.Add(Eop1);
         context.Communications.Add(idCard1);
         await context.SaveChangesAsync();
-
-        Console.WriteLine("More Seed to Sow");
     }
 }
