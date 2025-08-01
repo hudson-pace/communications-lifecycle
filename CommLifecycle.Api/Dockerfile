@@ -4,7 +4,7 @@ EXPOSE 5075
 
 # copy everything
 RUN ls
-COPY ./CommLifecycle.Api/ ./CommLifecycle.Api/
+COPY ./CommLifecycle.Api ./CommLifecycle.Api
 COPY ./SharedModels ./SharedModels
 
 # restore as distinct layers
