@@ -3,6 +3,8 @@ using MoviesApi.Services;
 using SharedModels.DTOs;
 using SharedModels.Models;
 
+namespace MoviesApi.Controllers;
+
 [ApiController]
 [Route("communications/{id:int}/StatusHistory")]
 public class CommunicationStatusesController : ControllerBase
@@ -14,7 +16,7 @@ public class CommunicationStatusesController : ControllerBase
     _communicationService = communicationService;
   }
 
-  [HttpPost("/")]
+  [HttpPost]
   public async Task<IActionResult> Create(CommunicationStatusChangeDto communicationStatusChangeDto)
   {
     CommunicationStatusChange communicationStatusChange = await _communicationService.CreateCommunicationStatusChangeAsync(communicationStatusChangeDto);

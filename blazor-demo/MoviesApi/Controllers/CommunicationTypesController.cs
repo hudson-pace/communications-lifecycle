@@ -3,6 +3,8 @@ using MoviesApi.Services;
 using SharedModels.DTOs;
 using SharedModels.Models;
 
+namespace MoviesApi.Controllers;
+
 [ApiController]
 [Route("CommunicationTypes")]
 public class CommunicationTypesController : ControllerBase
@@ -14,25 +16,25 @@ public class CommunicationTypesController : ControllerBase
     _communicationService = communicationService;
   }
 
-  [HttpGet("/")]
+  [HttpGet]
   public async Task<IActionResult> GetAll()
   {
-    List<CommunicationTypeDto> communicationTypes = await _communicationService.GetAllCommunicationTypesAsync();
+    List<CommunicationTypeDto> communicationTypes = await _communicationService.GetAllCommunicationTypesAsync() ?? [];
     return communicationTypes is null ? NotFound() : Ok(communicationTypes);
   }
-  [HttpGet("/{id:int}")]
+  [HttpGet("{id:int}")]
   public async Task<IActionResult> GetOne(int id)
   {
     CommunicationTypeDto? communicationType = await _communicationService.GetCommunicationTypeAsync(id);
     return communicationType is null ? NotFound() : Ok(communicationType);
   }
-  [HttpPost("/")]
+  [HttpPost]
   public async Task<IActionResult> Create(CommunicationTypeDto communicationTypeDto)
   {
     CommunicationType communicationType = await _communicationService.CreateCommunicationTypeAsync(communicationTypeDto);
     return communicationType is null ? BadRequest() : NoContent();
   }
-  [HttpPut("/{id:int}")]
+  [HttpPut("{id:int}")]
   public async Task<IActionResult> Update(int id, CommunicationTypeDto communicationTypeDto)
   {
     CommunicationType communicationType = await _communicationService.UpdateCommunicationTypeAsync(communicationTypeDto);

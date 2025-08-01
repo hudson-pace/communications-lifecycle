@@ -4,82 +4,83 @@ namespace MoviesApi.Services;
 
 public class SeedDb
 {
-  public SeedDb()
-  {}
-  public async Task Seed(MoviesApiContext context)
-  {
-    CommunicationType EobType = new() { Name = "EOB" };
-    CommunicationType EopType = new() { Name = "EOP" };
-    CommunicationType IdCardType = new() { Name = "ID Card" };
-
-    context.CommunicationTypes.Add(EobType);
-    context.CommunicationTypes.Add(EopType);
-    context.CommunicationTypes.Add(IdCardType);
-    await context.SaveChangesAsync();
-
-    Communication Eob1 = new()
+    public SeedDb()
+    { }
+    public async Task Seed(MoviesApiContext context)
     {
-      Title = "Eob 1",
-      Type = EobType,
-      StatusHistory = [
-            new CommunicationStatusChange {
-                Status = new CommunicationStatus {
-                    Type = EobType,
-                    Description = "Released",
-                }
-            },
-            new CommunicationStatusChange {
-                Status = new CommunicationStatus {
-                    Type = EobType,
-                    Description = "Printed",
-                }
-            }
-        ],
-    };
-    Communication Eop1 = new()
-    {
-      Title = "Eop 1",
-      Type = EopType,
-      StatusHistory = [
-            new CommunicationStatusChange {
-                Status = new CommunicationStatus {
-                    Type = EopType,
-                    Description = "Released",
-                }
-            },
-            new CommunicationStatusChange {
-                Status = new CommunicationStatus {
-                    Type = EopType,
-                    Description = "Delivered",
-                }
-            }
-        ],
-    };
-    Communication IdCard1 = new()
-    {
-      Title = "ID Card 1",
-      Type = IdCardType,
-      StatusHistory = [
-            new CommunicationStatusChange {
-                Status = new CommunicationStatus {
-                    Type = IdCardType,
-                    Description = "QueuedForPrinting",
-                }
-            },
-            new CommunicationStatusChange {
-                Status = new CommunicationStatus {
-                    Type = IdCardType,
-                    Description = "Printed",
-                }
-            }
-        ],
-    };
+        CommunicationType EobType = new()
+        {
+            Name = "EOB",
+            Statuses = [
+                new CommunicationStatus {
+                    Description = "Released"
+                },
+                new CommunicationStatus {
+                    Description = "Printed"
+                }]
+        };
+        CommunicationType EopType = new()
+        {
+            Name = "EOP",
+            Statuses = [
+                new CommunicationStatus {
+                    Description = "Released"
+                },
+                new CommunicationStatus {
+                    Description = "Delivered"
+                }],
+        };
+        CommunicationType IdCardType = new()
+        {
+            Name = "ID Card",
+            Statuses = [
+                new CommunicationStatus {
+                    Description = "QueuedForPrinting"
+                },
+                new CommunicationStatus {
+                    Description = "Printed"
+                }],
+        };
 
-    context.Communications.Add(Eob1);
-    context.Communications.Add(Eop1);
-    context.Communications.Add(IdCard1);
-    await context.SaveChangesAsync();
+        context.CommunicationTypes.Add(EobType);
+        context.CommunicationTypes.Add(EopType);
+        context.CommunicationTypes.Add(IdCardType);
+        await context.SaveChangesAsync();
+        
 
-    Console.WriteLine("More Seed to Sow");
-  }
+        Communication Eob1 = new()
+        {
+            Title = "Eob 1",
+            Type = EobType,
+            StatusHistory = [..EobType.Statuses.Select(status => new CommunicationStatusChange
+                {
+                    Status = status,
+                })],
+        };
+        Communication Eop1 = new()
+        {
+            Title = "Eop 1",
+            Type = EopType,
+            StatusHistory = [..EopType.Statuses.Select(status => new CommunicationStatusChange
+                {
+                    Status = status,
+                })]
+        };
+        Communication idCard1 = new()
+        {
+            Title = "ID Card 1",
+            Type = IdCardType,
+            StatusHistory = [..IdCardType.Statuses.Select(status => new CommunicationStatusChange
+                {
+                    Status = status,
+                })]
+        };
+
+        context.Communications.Add(Eob1);
+        context.Communications.Add(Eop1);
+        context.Communications.Add(idCard1);
+        await context.SaveChangesAsync();
+
+        Console.WriteLine("More Seed to Sow");
+    }
 }
