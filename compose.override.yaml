@@ -3,7 +3,7 @@ services:
   aspnet:
     entrypoint: ["dotnet", "watch", "run", "--urls", "http://*:8080", "--non-interactive"]
     volumes:
-      - ./BlazorApp1:/App/BlazorApp1
+      - ./CommLifecycle.Web:/App/CommLifecycle.Web
       - ./SharedModels/DTOs:/App/SharedModels/DTOs
       - ./SharedModels/Models:/App/SharedModels/Models
       - ./SharedModels/Mappers:/App/SharedModels/Mappers

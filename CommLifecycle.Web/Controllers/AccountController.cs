@@ -1,0 +1,37 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Okta.AspNetCore;
+using Microsoft.EntityFrameworkCore;
+using CommLifecycle.Web.Services;
+
+namespace CommLifecycle.Web.Controllers
+{
+    [Route("[controller]/[action]")]
+    public class AccountController : Controller
+    {
+        public async Task<IActionResult> SignIn([FromQuery] string returnUrl)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge(OktaDefaults.MvcAuthenticationScheme);
+            }
+            return LocalRedirect(returnUrl ?? Url.Content("~/"));
+        }
+        public IActionResult SignOut([FromQuery] string returnUrl)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return LocalRedirect(returnUrl ?? Url.Content("~/"));
+            }
+            return new SignOutResult(
+                new[]
+                {
+                    OktaDefaults.MvcAuthenticationScheme,
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                },
+                new AuthenticationProperties { RedirectUri = Url.Content("~/") }
+            );
+        }
+    }
+}

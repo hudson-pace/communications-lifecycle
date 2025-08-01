@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using MoviesApi.Services;
+using NUnit.Framework.Internal;
 using SharedModels.Models;
 
 namespace MoviesApi.Tests;
@@ -27,7 +29,7 @@ public class Tests
         SeedDb s = new();
         await s.Seed(context);
 
-        _communicationService = new CommunicationService(context);
+        _communicationService = new CommunicationService(context, NullLogger<CommunicationService>.Instance);
     }
 
     [Test]
