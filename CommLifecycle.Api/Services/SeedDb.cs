@@ -1,12 +1,12 @@
 using SharedModels.Models;
 
-namespace MoviesApi.Services;
+namespace CommLifecycle.Api.Services;
 
 public class SeedDb
 {
     public SeedDb()
     { }
-    public async Task Seed(MoviesApiContext context)
+    public async Task Seed(CommLifecycleApiContext context)
     {
         CommunicationType EobType = new()
         {

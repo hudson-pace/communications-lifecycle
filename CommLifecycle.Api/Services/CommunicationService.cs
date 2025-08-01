@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using SharedModels.DTOs;
 using System.Diagnostics;
 
-namespace MoviesApi.Services;
+namespace CommLifecycle.Api.Services;
 
 public class CommunicationService : ICommunicationService
 {
-  private readonly MoviesApiContext _context;
+  private readonly CommLifecycleApiContext _context;
   private readonly ILogger<CommunicationService> _logger;
-  public CommunicationService(MoviesApiContext context, ILogger<CommunicationService> logger)
+  public CommunicationService(CommLifecycleApiContext context, ILogger<CommunicationService> logger)
   {
     _context = context;
     _logger = logger;

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MoviesApi\MoviesApi.csproj" />
+    <ProjectReference Include="..\CommLifecycle.Api\CommLifecycle.Api.csproj" />
   </ItemGroup>
 
 </Project>

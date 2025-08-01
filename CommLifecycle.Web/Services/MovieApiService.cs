@@ -6,7 +6,7 @@ public class MovieApiService
   private readonly HttpClient _http;
   public MovieApiService(IHttpClientFactory factory)
   {
-    _http = factory.CreateClient("MoviesApi");
+    _http = factory.CreateClient("CommLifecycle.Api");
   }
   public async Task<List<CommunicationDto>?> GetCommunicationsAsync()
   {

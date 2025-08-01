@@ -3,7 +3,7 @@ using SharedModels.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.DTOs;
 
-namespace MoviesApi.Services;
+namespace CommLifecycle.Api.Services;
 
 public interface ICommunicationService
 {

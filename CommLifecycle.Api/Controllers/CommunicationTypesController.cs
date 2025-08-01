@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using MoviesApi.Services;
+using CommLifecycle.Api.Services;
 using SharedModels.DTOs;
 using SharedModels.Models;
 
-namespace MoviesApi.Controllers;
+namespace CommLifecycle.Api.Controllers;
 
 [ApiController]
 [Route("CommunicationTypes")]

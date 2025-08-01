@@ -6,8 +6,8 @@ services:
       - "5075:8080"
     build:
       context: .
-      dockerfile: ./MoviesApi/Dockerfile
-    entrypoint: ["dotnet", "MoviesApi.dll"]
+      dockerfile: ./CommLifecycle.Api/Dockerfile
+    entrypoint: ["dotnet", "CommLifecycle.Api.dll"]
 
   aspnet:
     image: counter-image
