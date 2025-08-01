@@ -42,7 +42,8 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<CommLifecycleApiContext>();
     await context.Database.MigrateAsync();
-    await SeedDb.Seed(context);
+    int communicationCount = await context.Communications.CountAsync();
+    if (communicationCount == 0) await SeedDb.Seed(context);
 }
 
 app.Run();
