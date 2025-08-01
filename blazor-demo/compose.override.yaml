@@ -4,7 +4,9 @@ services:
     entrypoint: ["dotnet", "watch", "run", "--urls", "http://*:8080", "--non-interactive"]
     volumes:
       - ./BlazorApp1:/App/BlazorApp1
-      - ./SharedModels:/App/SharedModels
+      - ./SharedModels/DTOs:/App/SharedModels/DTOs
+      - ./SharedModels/Models:/App/SharedModels/Models
+      - ./SharedModels/Mappers:/App/SharedModels/Mappers
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=true
       - DOTNET_WATCH_RESTART_ON_RUDE=1

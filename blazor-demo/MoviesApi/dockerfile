@@ -5,7 +5,6 @@ EXPOSE 5075
 # copy everything
 RUN ls
 COPY ./MoviesApi/ ./MoviesApi/
-COPY ./SharedModels/SharedModels.csproj ./SharedModels/
 COPY ./SharedModels ./SharedModels
 
 # restore as distinct layers
