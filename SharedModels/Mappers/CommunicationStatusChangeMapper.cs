@@ -15,6 +15,7 @@ public static class CommunicationStatusChangeMapper
   {
     Id = communicationStatusChangeDto.Id,
     CommunicationId = communicationStatusChangeDto.CommunicationId,
+    CommunicationStatusId = communicationStatusChangeDto.CommunicationStatusId,
     Status = communicationStatusChangeDto.Status?.ToEntity()!,
     CreatedAt = communicationStatusChangeDto.CreatedAt,
   };

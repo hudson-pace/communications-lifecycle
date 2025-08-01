@@ -7,7 +7,7 @@ public static class CommunicationTypeMapper
   {
     Id = communicationType.Id,
     Name = communicationType.Name,
-    Statuses = communicationType.Statuses?.Select(status => status.ToDto()).ToList(),
+    Statuses = communicationType.Statuses?.Select(status => status.ToDto()).ToList() ?? [],
   };
   public static CommunicationType ToEntity(this CommunicationTypeDto communicationTypeDto) => new CommunicationType()
   {

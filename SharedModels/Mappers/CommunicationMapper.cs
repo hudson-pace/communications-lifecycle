@@ -7,6 +7,7 @@ public static class CommunicationMapper
   {
     Id = communication.Id,
     Title = communication.Title,
+    CommunicationTypeId = communication.CommunicationTypeId,
     Type = communication.Type?.ToDto(),
     StatusHistory = communication.StatusHistory?.Select(statusChange => statusChange.ToDto()).ToList(),
   };
