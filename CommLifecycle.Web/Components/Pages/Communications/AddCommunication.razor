@@ -6,31 +6,36 @@
 @rendermode InteractiveServer
 @namespace CommLifecycle.Web.Components
 
-<EditForm Model="@_communication" OnValidSubmit="HandleValidSubmit" FormName="create" Enhance>
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+@if (_types is not null)
+{
+    <EditForm Model="@_communication" OnValidSubmit="HandleValidSubmit" FormName="create" Enhance>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
-    <div class="mb-3">
-        <label>Title</label>
-        <InputText @bind-Value="_communication.Title" class="form-control" />
-    </div>
+        <div class="mb-3">
+            <label>Title</label>
+            <InputText @bind-Value="_communication.Title" class="form-control" />
+        </div>
 
-    <div class="mb-3">
-        <label>Type</label>
-        <InputSelect @bind-Value="_communication.CommunicationTypeId" class="form-select">
-            <option value="">Select type</option>
-            @foreach (var type in _types)
-            {
-                <option value="@type.Id">@type.Name</option>
-            }
-        </InputSelect>
-    </div>
+        <div class="mb-3">
+            <label>Type</label>
+            <InputSelect @bind-Value="_communication.CommunicationTypeId" class="form-select">
+                <option value="">Select type</option>
+                @foreach (var type in _types)
+                {
+                    <option value="@type.Id">@type.Name</option>
+                }
+            </InputSelect>
+        </div>
 
-    <p>debug: IsNull = @(_communication is null)</p>
-    <p>debug: Title = @_communication.Title</p>
-    <p>debug: Type ID = @_communication.CommunicationTypeId</p>
-    <button class="btn btn-primary" type="submit">Add Communication</button>
-</EditForm>
+        <p>debug: IsNull = @(_communication is null)</p>
+        <p>debug: Title = @_communication.Title</p>
+        <p>debug: Type ID = @_communication.CommunicationTypeId</p>
+        <button class="btn btn-primary" type="submit">Add Communication</button>
+    </EditForm>
+} else {
+    <Spinner />
+}
 
 @code {
     private CommunicationDto _communication = new();
