@@ -91,15 +91,26 @@ public class CommunicationService : ICommunicationService
 
   public async Task<List<CommunicationTypeDto>> GetAllCommunicationTypesAsync()
   {
-    List<CommunicationTypeDto>? communicationType = await _context.CommunicationTypes
+    List<CommunicationTypeDto>? communicationTypes = await _context.CommunicationTypes
       .Select(c => new CommunicationTypeDto
       {
         Id = c.Id,
         Name = c.Name,
+        Statuses = c.Statuses.Select(s => new CommunicationStatusDto
+        {
+          Id = s.Id,
+          Description = s.Description,
+        }).ToList()
       })
       .ToListAsync();
-    return communicationType;
+    communicationTypes.ForEach(communicationType =>
+    {
+      _logger.LogInformation($"Communication type {communicationType.Name} has {communicationType.Statuses.Count} statuses.");
+    });
+    return communicationTypes;
+  
   }
+  
   public async Task<CommunicationTypeDto?> GetCommunicationTypeAsync(int id)
   {
     CommunicationTypeDto? communicationType = await _context.CommunicationTypes
@@ -108,6 +119,11 @@ public class CommunicationService : ICommunicationService
       {
         Id = c.Id,
         Name = c.Name,
+        Statuses = c.Statuses.Select(s => new CommunicationStatusDto
+        {
+          Id = s.Id,
+          Description = s.Description,
+        }).ToList()
       })
       .FirstOrDefaultAsync();
     return communicationType;

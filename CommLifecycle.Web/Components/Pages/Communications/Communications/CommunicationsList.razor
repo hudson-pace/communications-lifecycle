@@ -13,14 +13,14 @@
 <h1>Communications</h1>
 
 <p>
-    <a href="communications/create">Create New</a>
+    <a href="/communications/create">Create New Communication</a>
 </p>
 
 @if (communications is not null)
 {
     <QuickGrid TGridItem="CommunicationDto" Items="@communications" Class="table table-striped">
         <TemplateColumn Title="Name" Context="communication">
-            <a href=@($"/communications/communication/{communication.Id}")>@communication.Title</a>
+            <a href=@($"/communications/c/{communication.Id}")>@communication.Title</a>
         </TemplateColumn>
         <PropertyColumn Title="Type" Property="communication => communication.Type.Name" />
         <PropertyColumn Title="Status" Property="@(communication =>

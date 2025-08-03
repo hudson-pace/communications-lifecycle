@@ -1,0 +1,45 @@
+@page "/types"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.QuickGrid;
+@using CommLifecycle.Web.Services;
+@using SharedModels.DTOs;
+@implements IAsyncDisposable
+@inject MovieApiService MovieApiService
+@namespace CommLifecycle.Web.Components
+
+<PageTitle>Communication Types</PageTitle>
+
+<h1>Communication Types</h1>
+
+<p>
+    <a href="/types/create">Create New Communication Type</a>
+</p>
+
+@if (communicationTypes is not null)
+{
+    <QuickGrid TGridItem="CommunicationTypeDto" Items="@communicationTypes" Class="table table-striped">
+        <PropertyColumn Title="Type" Property="communicationType => communicationType.Name" />
+        <TemplateColumn Title="Statuses" Context="communicationType">
+            Statuses : |
+            @foreach (CommunicationStatusDto communicationStatusDto in communicationType.Statuses)
+            {
+                <span> @communicationStatusDto.Description |</span>
+            }
+        </TemplateColumn>
+    </QuickGrid>
+} else {
+    <Spinner />
+}
+
+@code {
+    private IQueryable<CommunicationTypeDto>? communicationTypes;
+    protected override async Task OnInitializedAsync()
+    {
+        List<CommunicationTypeDto>? CommunicationTypes = await MovieApiService.GetCommunicationTypesAsync();
+        if (CommunicationTypes is not null) {
+            communicationTypes = CommunicationTypes.AsQueryable();
+        }
+    }
+    public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+}
