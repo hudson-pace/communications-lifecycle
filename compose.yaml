@@ -13,7 +13,6 @@ services:
     depends_on:
       sql-server:
         condition: service_healthy
-
   web:
     image: web-image
     environment:
@@ -42,5 +41,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"    # Messaging
+      - "15672:15672"  # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: dev
+      RABBITMQ_DEFAULT_PASS: devpass
 volumes:
   db-data:
