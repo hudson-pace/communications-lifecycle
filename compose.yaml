@@ -10,8 +10,12 @@ services:
     entrypoint: ["dotnet", "CommLifecycle.Api.dll"]
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
     depends_on:
       sql-server:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
   web:
     image: web-image
@@ -20,12 +24,17 @@ services:
       Okta:ClientId: ${OKTA_CLIENT_ID}
       Okta:ClientSecret: ${OKTA_CLIENT_SECRET}
       Okta:AuthorizationServerId: ${OKTA_AUTHORIZATION_SERVER_ID}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
     ports:
       - "8000:8080"
     build:
       context: .
       dockerfile: ./CommLifecycle.Web/Dockerfile
     entrypoint: ["dotnet", "CommLifecycle.Web.dll"]
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   sql-server:
     image: mcr.microsoft.com/mssql/server:2022-CU13-ubuntu-20.04
     container_name: sql-server-container
@@ -47,7 +56,12 @@ services:
       - "5672:5672"    # Messaging
       - "15672:15672"  # Management UI
     environment:
-      RABBITMQ_DEFAULT_USER: dev
-      RABBITMQ_DEFAULT_PASS: devpass
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 volumes:
   db-data:

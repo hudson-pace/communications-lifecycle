@@ -1,0 +1,28 @@
+@page "/eventsim"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.QuickGrid;
+@using CommLifecycle.Web.Services;
+@using SharedModels.DTOs;
+@implements IAsyncDisposable
+@inject IRabbitPublisher _rabbitPublisher
+@namespace CommLifecycle.Web.Components
+@rendermode InteractiveServer
+
+<PageTitle>Event Simulator</PageTitle>
+
+<h1>Event Simulator</h1>
+
+<InputText @bind-Value="message" class="form-control" />
+<button class="btn btn-primary" @onclick="HandleClick">Add Communication</button>
+
+@code {
+  private string message = string.Empty;
+  public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+  private void HandleClick()
+    {
+      _rabbitPublisher.PublishAsync(message);
+        Console.WriteLine("SUBBBMIITTITED");
+        Console.WriteLine(message);
+    }
+}

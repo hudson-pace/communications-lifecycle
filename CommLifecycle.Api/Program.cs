@@ -4,6 +4,7 @@ using CommLifecycle.Api.Services;
 using SharedModels.DTOs;
 using SharedModels.Models;
 using System.Diagnostics;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,18 @@ builder.Services.AddDbContextFactory<CommLifecycleApiContext>(options =>
         throw new InvalidOperationException("Connection string 'CommLifecycleApiContext' not found.")));
 
 builder.Services.AddScoped<ICommunicationService, CommunicationService>();
+
+var factory = new ConnectionFactory
+{
+    HostName = "host.docker.internal",
+    UserName = Environment.GetEnvironmentVariable("RABBITMQ_DEFAULT_USER") ?? string.Empty,
+    Password = Environment.GetEnvironmentVariable("RABBITMQ_DEFAULT_PASS") ?? string.Empty,
+};
+var connection = await factory.CreateConnectionAsync();
+builder.Services.AddSingleton(connection);
+builder.Services.AddScoped<IRabbitPublisher, RabbitPublisher>();
+
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -35,8 +48,6 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 app.MapControllers();
-
-app.MapGet("/debug-route", () => Results.Ok("Routing is fine."));
 
 using (var scope = app.Services.CreateScope())
 {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Okta.AspNetCore;
 using CommLifecycle.Web.Services;
 using Microsoft.IdentityModel.Tokens;
+using RabbitMQ.Client;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
@@ -17,6 +18,17 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped<MovieApiService>();
+
+var factory = new ConnectionFactory
+{
+    HostName = "host.docker.internal",
+    UserName = Environment.GetEnvironmentVariable("RABBITMQ_DEFAULT_USER") ?? string.Empty,
+    Password = Environment.GetEnvironmentVariable("RABBITMQ_DEFAULT_PASS") ?? string.Empty,
+};
+var connection = await factory.CreateConnectionAsync();
+builder.Services.AddSingleton(connection);
+builder.Services.AddScoped<IRabbitPublisher, RabbitPublisher>(_ => new RabbitPublisher(connection, "messageQueue"));
+
 builder.Services.AddHttpClient("CommLifecycle.Api", client =>
 {
     client.BaseAddress = new Uri("http://api:8080");

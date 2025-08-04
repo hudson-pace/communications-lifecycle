@@ -26,9 +26,7 @@ public class Tests
         };
         context.CommunicationTypes.Add(_testType);
         await context.SaveChangesAsync();
-
-        SeedDb s = new();
-        await s.Seed(context);
+        await SeedDb.Seed(context);
 
         _communicationService = new CommunicationService(context, NullLogger<CommunicationService>.Instance);
     }
