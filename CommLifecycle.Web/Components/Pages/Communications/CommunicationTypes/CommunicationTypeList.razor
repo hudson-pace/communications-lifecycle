@@ -20,6 +20,9 @@
 {
     <QuickGrid TGridItem="CommunicationTypeDto" Items="@communicationTypes" Class="table table-striped">
         <PropertyColumn Title="Type" Property="communicationType => communicationType.Name" />
+        <TemplateColumn Title="Type" Context="communicationType">
+            <a href="types/t/@communicationType.Id">@communicationType.Name</a>
+        </TemplateColumn>
         <TemplateColumn Title="Statuses" Context="communicationType">
             Statuses : |
             @foreach (CommunicationStatusDto communicationStatusDto in communicationType.Statuses)

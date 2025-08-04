@@ -55,7 +55,6 @@
         Description = s,
       })
       .ToList();
-    Console.WriteLine($"communication title is called {_communicationType.Name} and statuses are {_communicationType.Statuses.Count} in number.");
     await _movieApiService.CreateCommunicationTypeAsync(_communicationType);
     _navigationManager.NavigateTo("/Types");
   }

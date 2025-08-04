@@ -1,0 +1,40 @@
+@page "/types/t/{typeId:int}"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.QuickGrid;
+@using CommLifecycle.Web.Services;
+@using SharedModels.DTOs;
+@implements IAsyncDisposable
+@inject MovieApiService MovieApiService
+@namespace CommLifecycle.Web.Components
+
+<PageTitle>Communication Type</PageTitle>
+
+<h1>Communication Type</h1>
+
+@if (_communicationType is not null)
+{
+  <h3>Name: @_communicationType.Name</h3>
+  <h3>
+  @foreach (CommunicationStatusDto status in _communicationType.Statuses)
+  {
+    <span>@status.Description, </span>
+  }
+  </h3>
+}
+else
+{
+  <Spinner />
+}
+
+@code {
+  private CommunicationTypeDto? _communicationType;
+  private IQueryable<CommunicationStatusChangeDto>? statusHistory;
+  [Parameter]
+  public int typeId { get; set; }
+  protected override async Task OnInitializedAsync()
+  {
+    _communicationType = await MovieApiService.GetCommunicationTypeAsync(typeId);
+  }
+  public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+}
