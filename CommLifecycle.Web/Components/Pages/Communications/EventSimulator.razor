@@ -5,7 +5,7 @@
 @using CommLifecycle.Web.Services;
 @using SharedModels.DTOs;
 @implements IAsyncDisposable
-@inject IRabbitPublisher _rabbitPublisher
+@inject RabbitPublisher _rabbitPublisher
 @namespace CommLifecycle.Web.Components
 @rendermode InteractiveServer
 
@@ -22,7 +22,5 @@
   private void HandleClick()
     {
       _rabbitPublisher.PublishAsync(message);
-        Console.WriteLine("SUBBBMIITTITED");
-        Console.WriteLine(message);
     }
 }

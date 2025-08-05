@@ -31,8 +31,13 @@ var factory = new ConnectionFactory
 };
 var connection = await factory.CreateConnectionAsync();
 builder.Services.AddSingleton(connection);
-builder.Services.AddScoped<IRabbitPublisher, RabbitPublisher>();
+// builder.Services.AddScoped<IRabbitPublisher, RabbitPublisher>(); // _ => new RabbitPublisher("messageQueue2", connection));
+// builder.Services.AddScoped<IRabbitConsumer, RabbitConsumer>(); // _ => new RabbitConsumer("messageQueue", connection));
+builder.Services.AddSingleton<RabbitPublisher>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<RabbitPublisher>());
+builder.Services.AddHostedService<RabbitConsumer>();
 
+Console.WriteLine("LOG TEST");
 
 builder.Services.AddControllers();
 

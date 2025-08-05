@@ -27,7 +27,12 @@ var factory = new ConnectionFactory
 };
 var connection = await factory.CreateConnectionAsync();
 builder.Services.AddSingleton(connection);
-builder.Services.AddScoped<IRabbitPublisher, RabbitPublisher>(_ => new RabbitPublisher(connection, "messageQueue"));
+
+// AddHostedService registers as IHostedService. Add as singleton first to register as RabbitPublisher.
+builder.Services.AddSingleton<RabbitPublisher>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<RabbitPublisher>());
+
+builder.Services.AddHostedService<RabbitConsumer>();
 
 builder.Services.AddHttpClient("CommLifecycle.Api", client =>
 {
