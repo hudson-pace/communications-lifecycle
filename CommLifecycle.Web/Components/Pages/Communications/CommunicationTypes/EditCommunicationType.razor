@@ -1,0 +1,85 @@
+@page "/types/edit/{Id:int}"
+@using SharedModels.DTOs
+@using CommLifecycle.Web.Services
+@inject MovieApiService _movieApiService
+@inject NavigationManager _navigationManager
+@rendermode InteractiveServer
+@namespace CommLifecycle.Web.Components
+
+<EditForm Model="@_communicationType" OnValidSubmit="HandleValidSubmit" FormName="edit" Enhance>
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <div class="mb-3">
+    <label>Name</label>
+    <InputText @bind-Value="_communicationType.Name" class="form-control" />
+  </div>
+
+  <div class="mb-3">
+    <p>Creation</p>
+    @foreach (string status in creationStatuses)
+    {
+      <input type="checkbox" checked="@selectedStatuses.Contains(status)" @onchange="@(() => ToggleSelected(status))" />
+      <label>@status</label>
+    }
+    <p>Production</p>
+    @foreach (string status in productionStatuses)
+    {
+      <input type="checkbox" checked="@selectedStatuses.Contains(status)" @onchange="@(() => ToggleSelected(status))" />
+      <label>@status</label>
+    }
+    <p>Logistics</p>
+    @foreach (string status in logisticsStatuses)
+    {
+      <input type="checkbox" checked="@selectedStatuses.Contains(status)" @onchange="@(() => ToggleSelected(status))" />
+      <label>@status</label>
+    }
+  </div>
+
+  <button class="btn btn-primary" type="submit">Update Communication Type</button>
+</EditForm>
+
+@code {
+  [Parameter] public int Id { get; set; }
+
+  private CommunicationTypeDto _communicationType = new();
+  private List<string> selectedStatuses = [];
+  private List<string> creationStatuses = ["ReadyForRelease", "Released"];
+  private List<string> productionStatuses = ["QueuedForPrinting", "Printed", "Inserted", "WarehouseReady"];
+  private List<string> logisticsStatuses = ["Shipped", "InTransit", "Delivered", "Returned"];
+
+  protected override async Task OnInitializedAsync()
+  {
+    _communicationType = await _movieApiService.GetCommunicationTypeAsync(Id);
+
+    selectedStatuses = _communicationType.Statuses
+      .Select(s => s.Description)
+      .ToList();
+  }
+  
+private async Task HandleValidSubmit()
+  {/*
+    _communicationType.Statuses = selectedStatuses
+      .Select(s => new CommunicationStatusDto
+      {
+        Description = s,
+      })
+      .ToList();*/
+
+    await _movieApiService.UpdateCommunicationTypeAsync(_communicationType);
+    _navigationManager.NavigateTo("/Types");
+  }
+
+
+  private void ToggleSelected(string selected)
+  {
+    if (selectedStatuses.Contains(selected))
+    {
+      selectedStatuses.Remove(selected);
+    }
+    else
+    {
+      selectedStatuses.Add(selected);
+    }
+  }
+}

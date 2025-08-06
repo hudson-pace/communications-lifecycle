@@ -25,7 +25,10 @@ public static class SeedDb
                     Description = "Released"
                 },
                 new CommunicationStatus {
-                    Description = "Delivered"
+                    Description = "Inserted"
+                },
+                new CommunicationStatus {
+                    Description = "WarehouseReady"
                 }],
         };
         CommunicationType IdCardType = new()
@@ -37,6 +40,15 @@ public static class SeedDb
                 },
                 new CommunicationStatus {
                     Description = "Printed"
+                },
+            new CommunicationStatus {
+                Description = "Shipped"
+            },
+            new CommunicationStatus {
+                Description = "Delivered"
+            },
+                new CommunicationStatus {
+                    Description = "Returned"
                 }],
         };
 

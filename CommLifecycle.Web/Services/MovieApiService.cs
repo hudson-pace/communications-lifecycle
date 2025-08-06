@@ -42,4 +42,8 @@ public class MovieApiService
   {
     await _http.PostAsJsonAsync($"/communications/{communicationId}/StatusHistory", communicationStatusChangeDto);
   }
+  public async Task UpdateCommunicationTypeAsync(CommunicationTypeDto communicationType)
+  {
+    await _http.PutAsJsonAsync($"/CommunicationTypes/{communicationType.Id}", communicationType);
+  }
 }

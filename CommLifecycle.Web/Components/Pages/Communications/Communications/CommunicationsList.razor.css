@@ -1,0 +1,10 @@
+@keyframes highlightFade {
+  0%   { background-color: transparent; }
+  20%  { background-color: yellow; }
+  80%  { background-color: yellow; }
+  100% { background-color: transparent; }
+}
+
+.highlight-fade {
+  animation: highlightFade 2s ease-out forwards;
+}

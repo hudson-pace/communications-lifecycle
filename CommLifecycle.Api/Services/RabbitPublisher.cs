@@ -33,4 +33,8 @@ public class RabbitPublisher : BackgroundService
       Console.WriteLine("Channel is null.");
     }
   }
+  public async Task PublishReloadAlert(int communicationId)
+  {
+    await PublishAsync(communicationId.ToString());
+  }
 }

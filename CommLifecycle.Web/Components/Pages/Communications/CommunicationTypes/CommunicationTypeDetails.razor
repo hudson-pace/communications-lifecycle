@@ -1,40 +1,63 @@
 @page "/types/t/{typeId:int}"
-@using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components;
-@using Microsoft.AspNetCore.Components.QuickGrid;
-@using CommLifecycle.Web.Services;
-@using SharedModels.DTOs;
+@using Microsoft.AspNetCore.Components
+@using CommLifecycle.Web.Services
+@using SharedModels.DTOs
 @implements IAsyncDisposable
 @inject MovieApiService MovieApiService
+@inject NavigationManager NavigationManager
 @namespace CommLifecycle.Web.Components
+@rendermode InteractiveServer
 
 <PageTitle>Communication Type</PageTitle>
 
-<h1>Communication Type</h1>
+<h1 class="mb-4">Communication Type Details</h1>
 
 @if (_communicationType is not null)
 {
-  <h3>Name: @_communicationType.Name</h3>
-  <h3>
-  @foreach (CommunicationStatusDto status in _communicationType.Statuses)
-  {
-    <span>@status.Description, </span>
-  }
-  </h3>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="card-title mb-0">@_communicationType.Name</h4>
+                <button class="btn btn-outline-secondary" @onclick="NavigateToEdit">
+                    <i class="bi bi-pencil-square me-1"></i> Edit
+                </button>
+            </div>
+
+            @if (_communicationType.Statuses?.Any() == true)
+            {
+                <h6 class="mt-3">Statuses:</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach (var status in _communicationType.Statuses)
+                    {
+                        <span class="badge bg-primary">@status.Description</span>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No statuses assigned.</p>
+            }
+        </div>
+    </div>
 }
 else
 {
-  <Spinner />
+    <Spinner />
 }
 
 @code {
-  private CommunicationTypeDto? _communicationType;
-  private IQueryable<CommunicationStatusChangeDto>? statusHistory;
-  [Parameter]
-  public int typeId { get; set; }
-  protected override async Task OnInitializedAsync()
-  {
-    _communicationType = await MovieApiService.GetCommunicationTypeAsync(typeId);
-  }
-  public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+    private CommunicationTypeDto? _communicationType;
+    [Parameter] public int typeId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _communicationType = await MovieApiService.GetCommunicationTypeAsync(typeId);
+    }
+
+    private void NavigateToEdit()
+    {
+        NavigationManager.NavigateTo($"/types/edit/{typeId}");
+    }
+
+    public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
 }

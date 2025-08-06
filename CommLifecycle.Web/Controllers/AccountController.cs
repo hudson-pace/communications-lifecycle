@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Okta.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using CommLifecycle.Web.Services;
+using System.Security.Claims;
 
 namespace CommLifecycle.Web.Controllers
 {
@@ -16,7 +17,22 @@ namespace CommLifecycle.Web.Controllers
             {
                 return Challenge(OktaDefaults.MvcAuthenticationScheme);
             }
-            return LocalRedirect(returnUrl ?? Url.Content("~/"));
+            else
+            {
+                var roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
+                Console.WriteLine("ROLES ROLES ROLES");
+                foreach (var role in roles)
+                {
+                    Console.WriteLine($"User has role: {role}");
+                }
+                Console.WriteLine("CLAIMS");
+                Console.WriteLine(User.IsInRole("admin") ? "ADMIN" : "NOT");
+                foreach (var claim in User.Claims)
+                {
+                    Console.WriteLine($"Claim: {claim.Type} = {claim.Value}");
+                }
+            }
+            return LocalRedirect(returnUrl ?? Url.Content("~/Communications"));
         }
         public IActionResult SignOut([FromQuery] string returnUrl)
         {

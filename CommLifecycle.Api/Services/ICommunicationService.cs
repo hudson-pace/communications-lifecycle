@@ -11,6 +11,8 @@ public interface ICommunicationService
   Task<CommunicationDto?> GetCommunicationAsync(int id);
   Task<Communication> CreateCommunicationAsync(CommunicationDto CommunicationDto);
   Task<Communication> DeleteCommunicationAsync(Communication Communication);
+  Task<Communication> UpdateCommunicationAsync(CommunicationDto communicationDto);
+  Task<Communication> UpdateCommunicationStatusAsync(StatusChangeMessageDto statusChangeMessage);
 
   Task<List<CommunicationTypeDto>> GetAllCommunicationTypesAsync();
   Task<CommunicationTypeDto?> GetCommunicationTypeAsync(int id);

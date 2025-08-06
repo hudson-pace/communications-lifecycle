@@ -6,6 +6,8 @@
 @using SharedModels.DTOs;
 @implements IAsyncDisposable
 @inject RabbitPublisher _rabbitPublisher
+@inject NavigationManager _navigationManager
+@inject MovieApiService _apiService
 @namespace CommLifecycle.Web.Components
 @rendermode InteractiveServer
 
@@ -13,14 +15,83 @@
 
 <h1>Event Simulator</h1>
 
-<InputText @bind-Value="message" class="form-control" />
-<button class="btn btn-primary" @onclick="HandleClick">Add Communication</button>
+@if (_communications is not null) //_communication is not null && _communication.Type is not null)
+{
+  <InputSelect
+          class="form-select"
+          TValue="int?"
+          Value="_selectedCommunicationId"
+          ValueChanged="OnSelectedCommunicationChanged"
+          ValueExpression="@(() => _selectedCommunicationId)">
+    <option value="">Select Communication</option>
+    @foreach (var communication in _communications)
+    {
+      <option value="@communication.Id">@communication.Title (@communication.Type.Name)</option>
+    }
+  </InputSelect>
+  @if (_communication is not null && _communication.Type is not null)
+  {
+    <h3>@_communication.Title</h3>
+    <div class="mb-3">
+    <label>Type</label>
+    <InputSelect @bind-Value="_newStatusId" class="form-select">
+      <option value="">Select status</option>
+      @foreach (var status in _communication.Type.Statuses)
+      {
+        <option value="@status.Id">@status.Description</option>
+      }
+    </InputSelect>
+    </div>
+    <button class="btn btn-primary" @onclick="HandleClick">Update Status</button>
+  }
+  
+} else {
+  <Spinner />
+}
 
 @code {
-  private string message = string.Empty;
-  public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
-  private void HandleClick()
+  private string _message = string.Empty;
+  private List<CommunicationDto>? _communications;
+  private CommunicationDto? _communication;
+  private int? _selectedCommunicationId;
+  private int? _newStatusId;
+
+  protected override async Task OnInitializedAsync()
+  {
+    _communications = await _apiService.GetCommunicationsAsync();
+    var uri = _navigationManager.ToAbsoluteUri(_navigationManager.Uri);
+    var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+    if (int.TryParse(query["communicationId"], out int communicationId))
     {
-      _rabbitPublisher.PublishAsync(message);
+      _selectedCommunicationId = communicationId;
+      _communication = await _apiService.GetCommunicationAsync(communicationId);
+      string s = _communication is null ? "true" : "false";
+      Console.WriteLine($"comm null: {s}");
     }
+  }
+  public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+  private async Task HandleClick()
+  {
+    if (_communication is not null && _newStatusId is not null)
+    {
+      Console.WriteLine($"updating... comm {_communication.Title} status updated to {_newStatusId}");
+      _rabbitPublisher.PublishStatusUpdate(_selectedCommunicationId.Value, _newStatusId.Value);
+    } else {
+      Console.WriteLine("Could not update.");
+    }
+    
+    // await _rabbitPublisher.PublishAsync(_message);
+  }
+  private async Task OnSelectedCommunicationChanged(int? id)
+  {
+    _selectedCommunicationId = id;
+    if (id.HasValue)
+    {
+      _communication = await _apiService.GetCommunicationAsync(id.Value);
+      Console.WriteLine("Comm is " + _communication.Title); 
+    } else {
+      _communication = null;
+      Console.WriteLine("Comm is null.?");
+    }
+  }
 }

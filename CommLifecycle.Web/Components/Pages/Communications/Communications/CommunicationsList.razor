@@ -6,40 +6,116 @@
 @using SharedModels.DTOs;
 @implements IAsyncDisposable
 @inject MovieApiService MovieApiService
+@inject EventMediator _eventMediator
 @namespace CommLifecycle.Web.Components
+@rendermode InteractiveServer
 
 <PageTitle>Communications</PageTitle>
 
-<h1>Communications</h1>
+<CascadingAuthenticationState>
+<AuthorizeView>
+    <Authorized>
+        <h1>Communications</h1>
 
-<p>
-    <a href="/communications/create">Create New Communication</a>
-</p>
+        <p>
+            <a href="/communications/create">Create New Communication</a>
+        </p>
 
-@if (communications is not null)
-{
-    <QuickGrid TGridItem="CommunicationDto" Items="@communications" Class="table table-striped">
-        <TemplateColumn Title="Name" Context="communication">
-            <a href=@($"/communications/c/{communication.Id}")>@communication.Title</a>
-        </TemplateColumn>
-        <PropertyColumn Title="Type" Property="communication => communication.Type!.Name" />
-        <PropertyColumn Title="Status" Property="@(communication =>
-            communication.StatusHistory!.Count > 0 ?
-            communication.StatusHistory.ElementAt(0).Status!.Description :
-            "No Status Hisory Yet.")"/>
-    </QuickGrid>
-} else {
-    <Spinner />
-}
+        @if (communications is not null)
+        {
+            <QuickGrid TGridItem="CommunicationDto" ItemsProvider="@ProvideItems" Class="table table-striped">
+                <TemplateColumn Title="Name" Context="communication">
+                    <a href=@($"/communications/c/{communication.Id}")>@communication.Title</a>
+                </TemplateColumn>
+                <PropertyColumn Title="Type" Property="communication => communication.Type!.Name" />
+                <TemplateColumn Title="Status" Context="communication">
+                    @if (communication.StatusHistory.Count == 0) {
+                        <span>No status history yet.</span>
+                    } else {
+                        @if (statusIsFlagged && communication.Id == flaggedCommunicationId) {
+                            <span class="highlight-fade">@communication.StatusHistory[0].Status.Description</span>
+                        } else {
+                            <span>@communication.StatusHistory[0].Status.Description</span>
+                        }
+                    }
+                </TemplateColumn>
+        </QuickGrid>
+        }
+        else
+        {
+            <Spinner />
+        }
+    </Authorized>
+    <NotAuthorized>
+        Not Authorized.
+    </NotAuthorized>
+</AuthorizeView>
+</CascadingAuthenticationState>
 
 @code {
-    private IQueryable<CommunicationDto>? communications;
+    private List<CommunicationDto>? communications;
+    private string _subscriptionKey = Guid.NewGuid().ToString();
+    private bool statusIsFlagged = false;
+    private int flaggedCommunicationId;
     protected override async Task OnInitializedAsync()
     {
         List<CommunicationDto>? communicationList = await MovieApiService.GetCommunicationsAsync();
-        if (communicationList is not null) {
-            communications = communicationList.AsQueryable();
+        if (communicationList is not null)
+        {
+            communications = communicationList;
         }
+        _eventMediator.Subscribe(_subscriptionKey, HandleEvent);
     }
-    public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+    private async Task HandleEvent(string eventData)
+    {
+        Console.WriteLine("Handling event on list.");
+        int communicationId = int.Parse(eventData);
+        await InvokeAsync(async () =>
+        {
+            CommunicationDto communication = await MovieApiService.GetCommunicationAsync(communicationId);
+            int index = communications.FindIndex(c => c.Id == communicationId);
+            communications[index] = communication;
+            await InvokeAsync(StateHasChanged);
+            await TriggerFlag(communicationId);
+        });
+    }
+    private async Task TriggerFlag(int communicationId)
+    {
+        await InvokeAsync(() => {
+            statusIsFlagged = true;
+            flaggedCommunicationId = communicationId;
+            StateHasChanged();
+        });
+        await Task.Delay(400);
+        await InvokeAsync(() => {
+            statusIsFlagged = false;
+            StateHasChanged();
+        });
+    }
+    public async ValueTask DisposeAsync()
+    {
+        _eventMediator.Unsubscribe(_subscriptionKey);
+        await ValueTask.CompletedTask;
+    }
+    private GridItemsProvider<CommunicationDto> ProvideItems => async request =>
+{
+    var count = request.Count ?? communications.Count;
+
+    var page = communications
+        .Skip(request.StartIndex)
+        .Take(count)
+        .ToList();
+
+    return GridItemsProviderResult.From(page, communications.Count);
+};
+/*
+    private Task<ItemsProviderResult<CommunicationDto>> ProvideItems(GridItemsProviderRequest<CommunicationDto> request)
+    {
+        var count = request.Count ?? communications.Count;
+        var page = communications
+            .Skip(request.StartIndex)
+            .Take(count)
+            .ToList();
+        return Task.FromResult(GridItemsProviderResult.From(page, communications.Count));
+    }*/
 }

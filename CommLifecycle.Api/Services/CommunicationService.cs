@@ -29,7 +29,7 @@ public class CommunicationService : ICommunicationService
           Name = c.Type.Name,
         },
         StatusHistory = c.StatusHistory
-        .OrderBy(s => s.CreatedAt)
+        .OrderByDescending(s => s.CreatedAt)
         .Select(s => new CommunicationStatusChangeDto
         {
           Id = s.Id,
@@ -57,9 +57,14 @@ public class CommunicationService : ICommunicationService
         {
           Id = c.Type.Id,
           Name = c.Type.Name,
+          Statuses = c.Type.Statuses.Select(s => new CommunicationStatusDto
+          {
+            Id = s.Id,
+            Description = s.Description
+          }).ToList(),
         },
         StatusHistory = c.StatusHistory
-        .OrderBy(s => s.CreatedAt)
+        .OrderByDescending(s => s.CreatedAt)
         .Select(s => new CommunicationStatusChangeDto
         {
           Id = s.Id,
@@ -88,7 +93,25 @@ public class CommunicationService : ICommunicationService
     await _context.SaveChangesAsync();
     return Communication;
     }
-
+  public async Task<Communication> UpdateCommunicationAsync(CommunicationDto communicationDto)
+  {
+    Communication communication = communicationDto.ToEntity();
+    _context.Communications.Update(communication);
+    await _context.SaveChangesAsync();
+    return communication;
+  }
+  public async Task<Communication> UpdateCommunicationStatusAsync(StatusChangeMessageDto statusChangeMessage)
+  {
+    Communication communication = await _context.Communications.Where(c => c.Id == statusChangeMessage.CommunicationId).FirstOrDefaultAsync();
+    CommunicationStatusChange csc = new()
+    {
+      CommunicationId = statusChangeMessage.CommunicationId,
+      CommunicationStatusId = statusChangeMessage.CommunicationStatusId,
+    };
+    _context.CommunicationStatusChanges.Add(csc);
+    await _context.SaveChangesAsync();
+    return communication;
+  }
   public async Task<List<CommunicationTypeDto>> GetAllCommunicationTypesAsync()
   {
     List<CommunicationTypeDto>? communicationTypes = await _context.CommunicationTypes
@@ -108,7 +131,7 @@ public class CommunicationService : ICommunicationService
       _logger.LogInformation($"Communication type {communicationType.Name} has {communicationType.Statuses.Count} statuses.");
     });
     return communicationTypes;
-  
+
   }
   
   public async Task<CommunicationTypeDto?> GetCommunicationTypeAsync(int id)
@@ -139,7 +162,9 @@ public class CommunicationService : ICommunicationService
   {
     CommunicationType communicationType = CommunicationTypeDto.ToEntity();
     _context.CommunicationTypes.Update(communicationType);
+    Console.WriteLine("UPDATING");
     await _context.SaveChangesAsync();
+    Console.WriteLine(communicationType.Statuses.Count);
     return communicationType;
   }
 

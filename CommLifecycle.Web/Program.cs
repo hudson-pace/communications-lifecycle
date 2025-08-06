@@ -7,6 +7,7 @@ using Okta.AspNetCore;
 using CommLifecycle.Web.Services;
 using Microsoft.IdentityModel.Tokens;
 using RabbitMQ.Client;
+using Microsoft.AspNetCore.Authentication;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
@@ -18,6 +19,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped<MovieApiService>();
+builder.Services.AddSingleton<EventMediator>();
+builder.Services.AddScoped<IClaimsTransformation, RoleClaimsTransformer>();
 
 var factory = new ConnectionFactory
 {
@@ -58,7 +61,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     AuthorizationServerId = builder.Configuration.GetValue<string>("Okta:AuthorizationServerId"),
     ClientId = builder.Configuration.GetValue<string>("Okta:ClientId"),
     ClientSecret = builder.Configuration.GetValue<string>("Okta:ClientSecret"),
-    Scope = new List<string> { "openid", "profile", "email" },
+    Scope = new List<string> { "openid", "profile", "email", "groups" },
+    GetClaimsFromUserInfoEndpoint = true,
 });
 
 builder.Services.Configure<OpenIdConnectOptions>(OktaDefaults.MvcAuthenticationScheme, options =>

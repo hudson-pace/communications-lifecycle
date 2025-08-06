@@ -10,30 +10,38 @@
 
 <PageTitle>Communication Types</PageTitle>
 
-<h1>Communication Types</h1>
+<CascadingAuthenticationState>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <h1>Communication Types</h1>
 
-<p>
-    <a href="/types/create">Create New Communication Type</a>
-</p>
+        <p>
+            <a href="/types/create">Create New Communication Type</a>
+        </p>
 
-@if (communicationTypes is not null)
-{
-    <QuickGrid TGridItem="CommunicationTypeDto" Items="@communicationTypes" Class="table table-striped">
-        <PropertyColumn Title="Type" Property="communicationType => communicationType.Name" />
-        <TemplateColumn Title="Type" Context="communicationType">
-            <a href="types/t/@communicationType.Id">@communicationType.Name</a>
-        </TemplateColumn>
-        <TemplateColumn Title="Statuses" Context="communicationType">
-            Statuses : |
-            @foreach (CommunicationStatusDto communicationStatusDto in communicationType.Statuses)
-            {
-                <span> @communicationStatusDto.Description |</span>
-            }
-        </TemplateColumn>
-    </QuickGrid>
-} else {
-    <Spinner />
-}
+        @if (communicationTypes is not null)
+        {
+            <QuickGrid TGridItem="CommunicationTypeDto" Items="@communicationTypes" Class="table table-striped">
+                <TemplateColumn Title="Type" Context="communicationType">
+                    <a href="types/t/@communicationType.Id">@communicationType.Name</a>
+                </TemplateColumn>
+                <TemplateColumn Title="Statuses" Context="communicationType">
+                    Statuses : |
+                    @foreach (CommunicationStatusDto communicationStatusDto in communicationType.Statuses)
+                    {
+                        <span> @communicationStatusDto.Description |</span>
+                    }
+                </TemplateColumn>
+            </QuickGrid>
+        } else {
+            <Spinner />
+        }
+    </Authorized>
+    <NotAuthorized>
+        Not Authorized.
+    </NotAuthorized>
+</AuthorizeView>
+</CascadingAuthenticationState>
 
 @code {
     private IQueryable<CommunicationTypeDto>? communicationTypes;

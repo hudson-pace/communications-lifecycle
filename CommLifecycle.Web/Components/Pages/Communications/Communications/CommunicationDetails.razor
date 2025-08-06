@@ -6,35 +6,97 @@
 @using SharedModels.DTOs;
 @implements IAsyncDisposable
 @inject MovieApiService MovieApiService
+@inject EventMediator _eventMediator
 @namespace CommLifecycle.Web.Components
+@rendermode InteractiveServer
 
 <PageTitle>Communication</PageTitle>
+<CascadingAuthenticationState>
+<AuthorizeView>
+  <Authorized>
+    <h1>Communication</h1>
+    <a href="/eventsim?communicationId=@communicationId">Simulate event.</a>
 
-<h1>Communication</h1>
-
-@if (communication is not null)
-{
-  @if (statusHistory is not null)
-  {
-    <h2>Communication Status History</h2>
-    <QuickGrid TGridItem="CommunicationStatusChangeDto" Items="@statusHistory" Class="table table-striped">
-        <PropertyColumn Title="Description" Property="statusChange => statusChange.Status!.Description" />
-        <PropertyColumn Title="Created At" Property="statusChange => statusChange.CreatedAt" />
-    </QuickGrid>
-  }
-} else {
-    <Spinner />
-}
+    @if (communication is not null)
+    {
+      @if (statusHistory is not null)
+      {
+        <h2>Communication Status History</h2>
+        <QuickGrid TGridItem="CommunicationStatusChangeDto" Items="@statusHistory" Class="table table-striped">
+            <TemplateColumn Title="Description" Context="statusChange">
+              @if (statusIsFlagged && statusChange.Id == flaggedStatusId)
+              {
+                <span class="highlight-fade">@statusChange.Status!.Description</span>
+              } else 
+              {
+                <span>@statusChange.Status!.Description</span>
+              }
+            </TemplateColumn>
+            <TemplateColumn Title="Created At" Context="statusChange">
+              @if (statusIsFlagged && statusChange.Id == flaggedStatusId)
+              {
+                <span class="highlight-fade">@statusChange.CreatedAt</span>
+              } else 
+              {
+                <span>@statusChange.CreatedAt</span>
+              }
+            </TemplateColumn>
+        </QuickGrid>
+      }
+    } else {
+        <Spinner />
+    }
+  </Authorized>
+  <NotAuthorized>
+    Not Authorized.
+  </NotAuthorized>
+</AuthorizeView>
+</CascadingAuthenticationState>
 
 @code {
     private CommunicationDto? communication;
+    private string _subscriptionKey = Guid.NewGuid().ToString();
     private IQueryable<CommunicationStatusChangeDto>? statusHistory;
+    
+    private bool statusIsFlagged = false;
+    private int flaggedStatusId;
     [Parameter]
     public int communicationId { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
       communication = await MovieApiService.GetCommunicationAsync(communicationId);
       statusHistory = communication?.StatusHistory?.AsQueryable();
+      _eventMediator.Subscribe(_subscriptionKey, HandleEvent);
     }
-    public async ValueTask DisposeAsync() => await ValueTask.CompletedTask;
+    private async Task HandleEvent(string eventData) {
+      Console.WriteLine("handling event");
+      int communicationId = int.Parse(eventData);
+      communication = await MovieApiService.GetCommunicationAsync(communicationId);
+      statusHistory = communication.StatusHistory.AsQueryable();
+      await InvokeAsync(StateHasChanged);
+      var newStatus = statusHistory?.FirstOrDefault();
+      if (newStatus is not null)
+      {
+        await TriggerFlag(newStatus.Id);
+      }
+    }
+    public async ValueTask DisposeAsync()
+    {
+      _eventMediator.Unsubscribe(_subscriptionKey);
+      await ValueTask.CompletedTask;
+    }
+    private async Task TriggerFlag(int statusId)
+    {
+      await InvokeAsync(() => {
+        statusIsFlagged = true;
+        flaggedStatusId = statusId;
+        StateHasChanged();
+      });
+      await Task.Delay(400);
+      await InvokeAsync(() => {
+        statusIsFlagged = false;
+        StateHasChanged();
+      });
+    }
 }

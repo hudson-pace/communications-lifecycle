@@ -37,6 +37,7 @@ public class CommunicationTypesController : ControllerBase
   [HttpPut("{id:int}")]
   public async Task<IActionResult> Update(int id, CommunicationTypeDto communicationTypeDto)
   {
+    Console.WriteLine("HIT UPDATE.");
     CommunicationType communicationType = await _communicationService.UpdateCommunicationTypeAsync(communicationTypeDto);
     return communicationType is null ? BadRequest() : NoContent();
   }

@@ -5,16 +5,19 @@
     <div class="sidebar">
         <NavMenu />
     </div>
-
     <main>
         <div class="top-row px-4">
+            <CascadingAuthenticationState>
             <AuthorizeView>
                 <Authorized>
                     @if (context.User.Identity is not null)
                     {
-                        <span>@(context.User.Identity!.IsAuthenticated ? context.User.Identity.Name + ", " + context.User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value : "")</span>
+                        <span>@(context.User.Identity!.IsAuthenticated ? context.User.Identity.Name + ", " +
+                                                    context.User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value : "")</span>
                         <a href="Account/SignOut">Sign Out</a>
-                    } else {
+                    }
+                    else
+                    {
                         <span>Authentication error. User.Identity has not been set.</span>
                     }
                 </Authorized>
@@ -22,6 +25,7 @@
                     <a href="Account/SignIn">Sign In</a>
                 </NotAuthorized>
             </AuthorizeView>
+            </CascadingAuthenticationState>
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
