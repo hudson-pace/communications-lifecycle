@@ -1,5 +1,6 @@
 using SharedModels.DTOs;
 using SharedModels.Models;
+namespace SharedModels.Mappers;
 
 public static class CommunicationMapper
 {
@@ -19,4 +20,9 @@ public static class CommunicationMapper
     Type = communicationDto.Type?.ToEntity()!,
     StatusHistory = communicationDto.StatusHistory?.Select(statusChange => statusChange.ToEntity()).ToList()!,
   };
+  public static void PatchFrom(this Communication communication, CommunicationDto dto)
+  {
+    ArgumentNullException.ThrowIfNull(dto);
+    if (dto.Title is not null) communication.Title = dto.Title;
+  }
 }

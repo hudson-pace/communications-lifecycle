@@ -12,36 +12,19 @@ public class CommunicationTypeService(CommLifecycleApiContext context, ILogger<C
   public async Task<Result<List<CommunicationTypeDto>>> GetAllAsync(CancellationToken ct)
   {
     List<CommunicationTypeDto>? communicationTypes = await _context.CommunicationTypes
-      .Select(c => new CommunicationTypeDto
-      {
-        Id = c.Id,
-        Name = c.Name,
-        Statuses = c.Statuses.Select(s => new CommunicationStatusDto
-        {
-          Id = s.Id,
-          Description = s.Description,
-        }).ToList()
-      })
-      .ToListAsync();
-    return communicationTypes;
+      .Select(c => c.ToDto())
+      .ToListAsync(ct);
+    return Result<List<CommunicationTypeDto>>.Success(communicationTypes);
   }
 
-  public async Task<Result<CommunicationTypeDto?>> GetByIdAsync(int id, CancellationToken ct)
+  public async Task<Result<CommunicationTypeDto>> GetByIdAsync(int id, CancellationToken ct)
   {
     CommunicationTypeDto? communicationType = await _context.CommunicationTypes
       .Where(c => c.Id == id)
-      .Select(c => new CommunicationTypeDto
-      {
-        Id = c.Id,
-        Name = c.Name,
-        Statuses = c.Statuses.Select(s => new CommunicationStatusDto
-        {
-          Id = s.Id,
-          Description = s.Description,
-        }).ToList()
-      })
-      .FirstOrDefaultAsync();
-    return communicationType;
+      .Select(c => c.ToDto())
+      .SingleOrDefaultAsync(ct);
+    if (communicationType is null) return Result<CommunicationTypeDto>.Failure(new EntityNotFoundException(nameof(CommunicationType), id));
+    return Result<CommunicationTypeDto>.Success(communicationType);
   }
   public async Task<Result<CommunicationTypeDto>> CreateAsync(CommunicationTypeDto communicationTypeDto, CancellationToken ct)
   {
@@ -54,9 +37,10 @@ public class CommunicationTypeService(CommLifecycleApiContext context, ILogger<C
   }
   public async Task<Result<CommunicationTypeDto>> UpdateAsync(int id, CommunicationTypeDto communicationTypeDto, CancellationToken ct)
   {
-    CommunicationType? existingCommunicationType = await _context.CommunicationTypes.SingleOrDefaultAsync(c => c.Id == id, ct);
-    if (existingCommunicationType is null) return Result<CommunicationTypeDto>.Failure(new EntityNotFoundException(nameof(CommunicationType), id));
-    CommunicationType communicationType = communicationTypeDto.ToEntity();
+    CommunicationType? communicationType = await _context.CommunicationTypes.SingleOrDefaultAsync(c => c.Id == id, ct);
+    if (communicationType is null) return Result<CommunicationTypeDto>.Failure(new EntityNotFoundException(nameof(CommunicationType), id));
+    communicationType.PatchFrom(communicationTypeDto);
+    if (communicationType.Validate() is { IsFailure: true, Exception: Exception ex }) return Result<CommunicationTypeDto>.Failure(ex);
     _context.CommunicationTypes.Update(communicationType);
     Result result = await _context.TrySaveAsync(ct);
     return result.From(communicationType.ToDto());

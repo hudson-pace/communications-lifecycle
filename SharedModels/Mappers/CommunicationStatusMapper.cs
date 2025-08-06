@@ -1,6 +1,6 @@
 using SharedModels.DTOs;
 using SharedModels.Models;
-
+namespace SharedModels.Mappers;
 public static class CommunicationStatusMapper
 {
   public static CommunicationStatusDto ToDto(this CommunicationStatus communicationStatus) => new CommunicationStatusDto
