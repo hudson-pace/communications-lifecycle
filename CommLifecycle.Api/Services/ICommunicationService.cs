@@ -1,3 +1,7 @@
+/*
+  CRUD for Communication
+  status history projection
+*/
 using System;
 using SharedModels.Models;
 using Microsoft.EntityFrameworkCore;

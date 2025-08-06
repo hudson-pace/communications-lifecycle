@@ -112,62 +112,8 @@ public class CommunicationService : ICommunicationService
     await _context.SaveChangesAsync();
     return communication;
   }
-  public async Task<List<CommunicationTypeDto>> GetAllCommunicationTypesAsync()
-  {
-    List<CommunicationTypeDto>? communicationTypes = await _context.CommunicationTypes
-      .Select(c => new CommunicationTypeDto
-      {
-        Id = c.Id,
-        Name = c.Name,
-        Statuses = c.Statuses.Select(s => new CommunicationStatusDto
-        {
-          Id = s.Id,
-          Description = s.Description,
-        }).ToList()
-      })
-      .ToListAsync();
-    communicationTypes.ForEach(communicationType =>
-    {
-      _logger.LogInformation($"Communication type {communicationType.Name} has {communicationType.Statuses.Count} statuses.");
-    });
-    return communicationTypes;
-
-  }
-  
-  public async Task<CommunicationTypeDto?> GetCommunicationTypeAsync(int id)
-  {
-    CommunicationTypeDto? communicationType = await _context.CommunicationTypes
-      .Where(c => c.Id == id)
-      .Select(c => new CommunicationTypeDto
-      {
-        Id = c.Id,
-        Name = c.Name,
-        Statuses = c.Statuses.Select(s => new CommunicationStatusDto
-        {
-          Id = s.Id,
-          Description = s.Description,
-        }).ToList()
-      })
-      .FirstOrDefaultAsync();
-    return communicationType;
-  }
-  public async Task<CommunicationType> CreateCommunicationTypeAsync(CommunicationTypeDto CommunicationTypeDto)
-  {
-    CommunicationType communicationType = CommunicationTypeDto.ToEntity();
-    _context.CommunicationTypes.Add(communicationType);
-    await _context.SaveChangesAsync();
-    return communicationType;
-  }
-  public async Task<CommunicationType> UpdateCommunicationTypeAsync(CommunicationTypeDto CommunicationTypeDto)
-  {
-    CommunicationType communicationType = CommunicationTypeDto.ToEntity();
-    _context.CommunicationTypes.Update(communicationType);
-    Console.WriteLine("UPDATING");
-    await _context.SaveChangesAsync();
-    Console.WriteLine(communicationType.Statuses.Count);
-    return communicationType;
-  }
-
+    
+    
   public async Task<CommunicationStatusChange> CreateCommunicationStatusChangeAsync(CommunicationStatusChangeDto CommunicationStatusChangeDto)
   {
     CommunicationStatusChange communicationStatusChange = CommunicationStatusChangeDto.ToEntity();
