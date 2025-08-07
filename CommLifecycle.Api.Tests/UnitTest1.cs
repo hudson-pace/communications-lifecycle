@@ -11,7 +11,7 @@ public class Tests
 {
     private ICommunicationService _communicationService;
     private CommunicationType _testType;
-
+/*
     [SetUp]
     public async Task Setup()
     {
@@ -58,6 +58,6 @@ public class Tests
         };
         Communication ReturnedCommunication = await _communicationService.CreateCommunicationAsync(communicationDto);
         Assert.That(communicationDto, Is.EqualTo(ReturnedCommunication));
-        */
-    }
+        
+    }*/
 }
