@@ -5,7 +5,7 @@
 @using CommLifecycle.Web.Services;
 @using SharedModels.DTOs;
 @implements IAsyncDisposable
-@inject MovieApiService MovieApiService
+@inject CommunicationApiService _communicationApiService
 @inject EventMediator _eventMediator
 @namespace CommLifecycle.Web.Components
 @rendermode InteractiveServer
@@ -59,7 +59,7 @@
     private int flaggedCommunicationId;
     protected override async Task OnInitializedAsync()
     {
-        List<CommunicationDto>? communicationList = await MovieApiService.GetCommunicationsAsync();
+        List<CommunicationDto>? communicationList = await _communicationApiService.GetCommunicationsAsync();
         if (communicationList is not null)
         {
             communications = communicationList;
@@ -72,7 +72,7 @@
         int communicationId = int.Parse(eventData);
         await InvokeAsync(async () =>
         {
-            CommunicationDto communication = await MovieApiService.GetCommunicationAsync(communicationId);
+            CommunicationDto communication = await _communicationApiService.GetCommunicationAsync(communicationId);
             int index = communications.FindIndex(c => c.Id == communicationId);
             communications[index] = communication;
             await InvokeAsync(StateHasChanged);

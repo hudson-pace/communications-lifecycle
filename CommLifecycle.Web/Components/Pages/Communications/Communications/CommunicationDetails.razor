@@ -5,7 +5,7 @@
 @using CommLifecycle.Web.Services;
 @using SharedModels.DTOs;
 @implements IAsyncDisposable
-@inject MovieApiService MovieApiService
+@inject CommunicationApiService _communicationApiService
 @inject EventMediator _eventMediator
 @namespace CommLifecycle.Web.Components
 @rendermode InteractiveServer
@@ -65,14 +65,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-      communication = await MovieApiService.GetCommunicationAsync(communicationId);
+      communication = await _communicationApiService.GetCommunicationAsync(communicationId);
       statusHistory = communication?.StatusHistory?.AsQueryable();
       _eventMediator.Subscribe(_subscriptionKey, HandleEvent);
     }
     private async Task HandleEvent(string eventData) {
       Console.WriteLine("handling event");
       int communicationId = int.Parse(eventData);
-      communication = await MovieApiService.GetCommunicationAsync(communicationId);
+      communication = await _communicationApiService.GetCommunicationAsync(communicationId);
       statusHistory = communication.StatusHistory.AsQueryable();
       await InvokeAsync(StateHasChanged);
       var newStatus = statusHistory?.FirstOrDefault();

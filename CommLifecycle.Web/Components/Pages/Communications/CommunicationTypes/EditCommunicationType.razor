@@ -1,7 +1,7 @@
 @page "/types/edit/{Id:int}"
 @using SharedModels.DTOs
 @using CommLifecycle.Web.Services
-@inject MovieApiService _movieApiService
+@inject CommunicationApiService _communicationApiService
 @inject NavigationManager _navigationManager
 @rendermode InteractiveServer
 @namespace CommLifecycle.Web.Components
@@ -50,7 +50,7 @@
 
   protected override async Task OnInitializedAsync()
   {
-    _communicationType = await _movieApiService.GetCommunicationTypeAsync(Id);
+    _communicationType = await _communicationApiService.GetCommunicationTypeAsync(Id);
 
     selectedStatuses = _communicationType.Statuses
       .Select(s => s.Description)
@@ -66,7 +66,7 @@ private async Task HandleValidSubmit()
       })
       .ToList();*/
 
-    await _movieApiService.UpdateCommunicationTypeAsync(_communicationType);
+    await _communicationApiService.UpdateCommunicationTypeAsync(_communicationType);
     _navigationManager.NavigateTo("/Types");
   }
 

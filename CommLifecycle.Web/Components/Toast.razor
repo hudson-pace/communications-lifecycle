@@ -1,0 +1,37 @@
+@using CommLifecycle.Web.Services
+@inject ToastService ToastService
+
+<div class="toast-container">
+    @if (!string.IsNullOrEmpty(Message))
+    {
+        <div class="toast toast-error">
+            <strong>@Title</strong>
+            <div>@Message</div>
+        </div>
+    }
+</div>
+
+@code {
+    private string? Title;
+    private string? Message;
+
+    protected override void OnInitialized()
+    {
+        ToastService.OnShow += ShowToast;
+    }
+
+    private void ShowToast(string title, string message)
+    {
+        Title = title;
+        Message = message;
+        StateHasChanged();
+
+        // Auto-hide after 3 seconds
+        Task.Delay(3000).ContinueWith(_ =>
+        {
+            Title = null;
+            Message = null;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+}

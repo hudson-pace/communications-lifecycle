@@ -1,7 +1,7 @@
 @page "/types/create"
 @using SharedModels.DTOs
 @using CommLifecycle.Web.Services
-@inject MovieApiService _movieApiService
+@inject CommunicationApiService _communicationApiService
 @inject NavigationManager _navigationManager
 @rendermode InteractiveServer
 @namespace CommLifecycle.Web.Components
@@ -55,7 +55,7 @@
         Description = s,
       })
       .ToList();
-    await _movieApiService.CreateCommunicationTypeAsync(_communicationType);
+    await _communicationApiService.CreateCommunicationTypeAsync(_communicationType);
     _navigationManager.NavigateTo("/Types");
   }
 

@@ -26,20 +26,24 @@ public class CommunicationService(CommLifecycleApiContext context, ILogger<Commu
   }
   public async Task<Result<CommunicationDto>> GetByIdAsync(int id, CancellationToken ct)
   {
-    CommunicationDto? communication = await _context.Communications
+    Communication? communication = await _context.Communications
       .Where(c => c.Id == id)
-      .Select(c => c.ToDto())
+      .Include(c => c.StatusHistory)
+        .ThenInclude(sh => sh.Status)
       .SingleOrDefaultAsync(ct);
     if (communication is null) return Result<CommunicationDto>.Failure(new EntityNotFoundException(nameof(CommunicationDto), id));
-    return Result<CommunicationDto>.Success(communication);
+    return Result<CommunicationDto>.Success(communication.ToDto());
   }
   public async Task<Result<CommunicationDto>> CreateAsync(CommunicationDto communicationDto, CancellationToken ct)
   {
+    Console.WriteLine("ENTERING CREATE");
     if (communicationDto is null) return Result<CommunicationDto>.Failure(new ArgumentNullException(nameof(communicationDto)));
     Communication communication = communicationDto.ToEntity();
     if (communication.Validate() is { IsFailure: true, Exception: Exception ex }) return Result<CommunicationDto>.Failure(ex);
     _context.Communications.Add(communication);
     Result result = await _context.TrySaveAsync(ct);
+    Console.WriteLine("RETURNING FROM CREATE");
+    Console.WriteLine(result.IsSuccess ? "SUCCESS" : "FAILURE");
     return result.From(communication.ToDto());
   }
   public async Task<Result<CommunicationDto>> DeleteAsync(int id, CancellationToken ct)

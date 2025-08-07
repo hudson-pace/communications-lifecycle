@@ -18,9 +18,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped<MovieApiService>();
+builder.Services.AddScoped<CommunicationApiService>();
 builder.Services.AddSingleton<EventMediator>();
 builder.Services.AddScoped<IClaimsTransformation, RoleClaimsTransformer>();
+builder.Services.AddScoped<HttpService>();
 
 var factory = new ConnectionFactory
 {
@@ -36,6 +37,7 @@ builder.Services.AddSingleton<RabbitPublisher>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<RabbitPublisher>());
 
 builder.Services.AddHostedService<RabbitConsumer>();
+builder.Services.AddSingleton<ToastService>();
 
 builder.Services.AddHttpClient("CommLifecycle.Api", client =>
 {

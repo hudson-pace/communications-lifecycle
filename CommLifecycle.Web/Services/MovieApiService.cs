@@ -1,10 +1,10 @@
 using SharedModels.DTOs;
 namespace CommLifecycle.Web.Services;
 
-public class MovieApiService
+public class CommunicationApiService
 {
   private readonly HttpClient _http;
-  public MovieApiService(IHttpClientFactory factory)
+  public CommunicationApiService(IHttpClientFactory factory)
   {
     _http = factory.CreateClient("CommLifecycle.Api");
   }

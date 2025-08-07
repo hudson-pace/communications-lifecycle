@@ -3,7 +3,7 @@
 @using CommLifecycle.Web.Services
 @using SharedModels.DTOs
 @implements IAsyncDisposable
-@inject MovieApiService MovieApiService
+@inject CommunicationApiService _communicationApiService
 @inject NavigationManager NavigationManager
 @namespace CommLifecycle.Web.Components
 @rendermode InteractiveServer
@@ -51,7 +51,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _communicationType = await MovieApiService.GetCommunicationTypeAsync(typeId);
+        _communicationType = await _communicationApiService.GetCommunicationTypeAsync(typeId);
     }
 
     private void NavigateToEdit()

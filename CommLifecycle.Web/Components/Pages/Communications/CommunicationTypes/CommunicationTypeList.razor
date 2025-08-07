@@ -5,7 +5,7 @@
 @using CommLifecycle.Web.Services;
 @using SharedModels.DTOs;
 @implements IAsyncDisposable
-@inject MovieApiService MovieApiService
+@inject CommunicationApiService _communicationApiService
 @namespace CommLifecycle.Web.Components
 
 <PageTitle>Communication Types</PageTitle>
@@ -47,7 +47,7 @@
     private IQueryable<CommunicationTypeDto>? communicationTypes;
     protected override async Task OnInitializedAsync()
     {
-        List<CommunicationTypeDto>? CommunicationTypes = await MovieApiService.GetCommunicationTypesAsync();
+        List<CommunicationTypeDto>? CommunicationTypes = await _communicationApiService.GetCommunicationTypesAsync();
         if (CommunicationTypes is not null) {
             communicationTypes = CommunicationTypes.AsQueryable();
         }
