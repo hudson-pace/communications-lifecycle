@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using CommLifecycle.Api.Services;
 using SharedModels.DTOs;
 using SharedModels.Models;
+using CommLifecycle.Api.Services.CommunicationTypes;
 
 namespace CommLifecycle.Api.Controllers;
 
@@ -9,36 +10,23 @@ namespace CommLifecycle.Api.Controllers;
 [Route("CommunicationTypes")]
 public class CommunicationTypesController : ControllerBase
 {
-  private readonly ICommunicationService _communicationService;
+  private readonly ICommunicationTypeService _communicationTypeService;
 
-  public CommunicationTypesController(ICommunicationService communicationService)
+  public CommunicationTypesController(ICommunicationTypeService communicationTypeService)
   {
-    _communicationService = communicationService;
+    _communicationTypeService = communicationTypeService;
   }
 
   [HttpGet]
-  public async Task<IActionResult> GetAll()
-  {
-    List<CommunicationTypeDto> communicationTypes = await _communicationService.GetAllCommunicationTypesAsync() ?? [];
-    return communicationTypes is null ? NotFound() : Ok(communicationTypes);
-  }
+  public async Task<IActionResult> GetAll() => (await _communicationTypeService.GetAllAsync(HttpContext.RequestAborted)).ToActionResult();
   [HttpGet("{id:int}")]
-  public async Task<IActionResult> GetOne(int id)
-  {
-    CommunicationTypeDto? communicationType = await _communicationService.GetCommunicationTypeAsync(id);
-    return communicationType is null ? NotFound() : Ok(communicationType);
-  }
+  public async Task<IActionResult> GetOne(int id) => (await _communicationTypeService.GetByIdAsync(id, HttpContext.RequestAborted)).ToActionResult();
   [HttpPost]
-  public async Task<IActionResult> Create(CommunicationTypeDto communicationTypeDto)
-  {
-    CommunicationType communicationType = await _communicationService.CreateCommunicationTypeAsync(communicationTypeDto);
-    return communicationType is null ? BadRequest() : NoContent();
-  }
+  public async Task<IActionResult> Create(CommunicationTypeDto communicationTypeDto) =>
+    (await _communicationTypeService.CreateAsync(communicationTypeDto, HttpContext.RequestAborted))
+    .ToActionResult();
   [HttpPut("{id:int}")]
-  public async Task<IActionResult> Update(int id, CommunicationTypeDto communicationTypeDto)
-  {
-    Console.WriteLine("HIT UPDATE.");
-    CommunicationType communicationType = await _communicationService.UpdateCommunicationTypeAsync(communicationTypeDto);
-    return communicationType is null ? BadRequest() : NoContent();
-  }
+  public async Task<IActionResult> Update(int id, CommunicationTypeDto communicationTypeDto) =>
+    (await _communicationTypeService.UpdateAsync(id, communicationTypeDto, HttpContext.RequestAborted))
+    .ToActionResult();
 }

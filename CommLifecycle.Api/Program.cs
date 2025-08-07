@@ -5,6 +5,7 @@ using SharedModels.DTOs;
 using SharedModels.Models;
 using System.Diagnostics;
 using RabbitMQ.Client;
+using CommLifecycle.Api.Services.CommunicationTypes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddDbContextFactory<CommLifecycleApiContext>(options =>
         throw new InvalidOperationException("Connection string 'CommLifecycleApiContext' not found.")));
 
 builder.Services.AddScoped<ICommunicationService, CommunicationService>();
+builder.Services.AddScoped<ICommunicationTypeService, CommunicationTypeService>();
 
 var factory = new ConnectionFactory
 {

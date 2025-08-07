@@ -20,21 +20,9 @@ public class CommunicationsController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<IActionResult> GetAll()
-  {
-    List<CommunicationDto> communications = await _communicationService.GetAllCommunicationsAsync();
-    return communications is null ? NotFound() : Ok(communications);
-  }
+  public async Task<IActionResult> GetAll() => (await _communicationService.GetAllAsync(HttpContext.RequestAborted)).ToActionResult();
   [HttpGet("{id:int}")]
-  public async Task<IActionResult> GetOne(int id)
-  {
-    CommunicationDto? communication = await _communicationService.GetCommunicationAsync(id);
-    return communication is null ? NotFound() : Ok(communication);
-  }
+  public async Task<IActionResult> GetOne(int id) => (await _communicationService.GetByIdAsync(id, HttpContext.RequestAborted)).ToActionResult();
   [HttpPost]
-  public async Task<IActionResult> Create(CommunicationDto communicationDto)
-  {
-    Communication communication = await _communicationService.CreateCommunicationAsync(communicationDto);
-    return communication is null ? BadRequest() : NoContent();
-  }
+  public async Task<IActionResult> Create([FromBody] CommunicationDto communicationDto) => (await _communicationService.CreateAsync(communicationDto, HttpContext.RequestAborted)).ToActionResult();
 }

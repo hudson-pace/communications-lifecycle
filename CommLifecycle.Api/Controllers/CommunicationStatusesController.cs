@@ -17,9 +17,7 @@ public class CommunicationStatusesController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<IActionResult> Create(CommunicationStatusChangeDto communicationStatusChangeDto)
-  {
-    CommunicationStatusChange communicationStatusChange = await _communicationService.CreateCommunicationStatusChangeAsync(communicationStatusChangeDto);
-    return communicationStatusChange is null ? BadRequest() : NoContent();
-  }
+  public async Task<IActionResult> Create(int id, CommunicationStatusChangeDto communicationStatusChangeDto) =>
+    (await _communicationService.AppendCommunicationStatusChangeAsync(id, communicationStatusChangeDto, HttpContext.RequestAborted))
+    .ToActionResult();
 }

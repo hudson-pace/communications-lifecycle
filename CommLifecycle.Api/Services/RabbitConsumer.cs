@@ -4,6 +4,7 @@ using CommLifecycle.Api.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using SharedModels.DTOs;
+using SharedModels.Mappers;
 
 public class RabbitConsumer : BackgroundService
 {
@@ -34,7 +35,7 @@ public class RabbitConsumer : BackgroundService
       var json = Encoding.UTF8.GetString(body);
       StatusChangeMessageDto dto = JsonSerializer.Deserialize<StatusChangeMessageDto>(json);
       Console.WriteLine("Consumed by API.");
-      await _communicationService.UpdateCommunicationStatusAsync(dto);
+      await _communicationService.AppendCommunicationStatusChangeAsync(dto.CommunicationId, dto.ToCommunicationStatusChangeDto(), stoppingToken);
       await _rabbitPublisher.PublishAsync(dto.CommunicationId.ToString());
     };
     await channel.BasicConsumeAsync(queue: _queueName, autoAck: true, consumer: consumer, cancellationToken: stoppingToken);
