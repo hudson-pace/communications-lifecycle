@@ -3,7 +3,7 @@ using SharedModels.Models;
 namespace SharedModels.Mappers;
 public static class CommunicationStatusChangeMapper
 {
-  public static CommunicationStatusChangeDto ToDto(this CommunicationStatusChange communicationStatusChange) => new CommunicationStatusChangeDto
+  public static CommunicationStatusChangeDto ToDto(this CommunicationStatusChange communicationStatusChange) => new()
   {
     Id = communicationStatusChange.Id,
     CommunicationId = communicationStatusChange.CommunicationId,
@@ -11,7 +11,7 @@ public static class CommunicationStatusChangeMapper
     Status = communicationStatusChange.Status?.ToDto(),
     CreatedAt = communicationStatusChange.CreatedAt,
   };
-  public static CommunicationStatusChange ToEntity(this CommunicationStatusChangeDto communicationStatusChangeDto) => new CommunicationStatusChange()
+  public static CommunicationStatusChange ToEntity(this CommunicationStatusChangeDto communicationStatusChangeDto) => new()
   {
     Id = communicationStatusChangeDto.Id,
     CommunicationId = communicationStatusChangeDto.CommunicationId,

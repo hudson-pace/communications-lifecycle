@@ -15,10 +15,14 @@ public class CommunicationService(CommLifecycleApiContext context, ILogger<Commu
 
   public async Task<Result<List<CommunicationDto>>> GetAllAsync(CancellationToken ct)
   {
-    List<CommunicationDto>? communications = await _context.Communications
-      .Select(c => c.ToDto())
+    List<Communication>? communications = await _context.Communications
+      .Include(c => c.Type)
+        .ThenInclude(t => t.Statuses)
+      .Include(c => c.StatusHistory.OrderByDescending(sh => sh.CreatedAt).Take(1)) // For displaying list, only take most recent.
+        .ThenInclude(sh => sh.Status)
       .ToListAsync(ct);
-    return Result<List<CommunicationDto>>.Success(communications);
+    List<CommunicationDto> communicationDtos = [.. communications.Select(c => c.ToDto())];
+    return Result<List<CommunicationDto>>.Success(communicationDtos);
   }
   public async Task<Result<CommunicationDto>> GetByIdAsync(int id, CancellationToken ct)
   {
