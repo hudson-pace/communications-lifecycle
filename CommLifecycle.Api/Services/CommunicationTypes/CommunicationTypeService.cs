@@ -11,20 +11,21 @@ public class CommunicationTypeService(CommLifecycleApiContext context, ILogger<C
 
   public async Task<Result<List<CommunicationTypeDto>>> GetAllAsync(CancellationToken ct)
   {
-    List<CommunicationTypeDto>? communicationTypes = await _context.CommunicationTypes
-      .Select(c => c.ToDto())
+    List<CommunicationType> communicationTypes = await _context.CommunicationTypes
+      .Include(t => t.Statuses)
       .ToListAsync(ct);
-    return Result<List<CommunicationTypeDto>>.Success(communicationTypes);
+    List<CommunicationTypeDto> communicationTypeDtos = [.. communicationTypes.Select(ct => ct.ToDto())];
+    return Result<List<CommunicationTypeDto>>.Success(communicationTypeDtos);
   }
 
   public async Task<Result<CommunicationTypeDto>> GetByIdAsync(int id, CancellationToken ct)
   {
-    CommunicationTypeDto? communicationType = await _context.CommunicationTypes
+    CommunicationType? communicationType = await _context.CommunicationTypes
       .Where(c => c.Id == id)
-      .Select(c => c.ToDto())
+      .Include(t => t.Statuses)
       .SingleOrDefaultAsync(ct);
     if (communicationType is null) return Result<CommunicationTypeDto>.Failure(new EntityNotFoundException(nameof(CommunicationType), id));
-    return Result<CommunicationTypeDto>.Success(communicationType);
+    return Result<CommunicationTypeDto>.Success(communicationType.ToDto());
   }
   public async Task<Result<CommunicationTypeDto>> CreateAsync(CommunicationTypeDto communicationTypeDto, CancellationToken ct)
   {
