@@ -10,9 +10,8 @@ public class CommunicationStatusChange
 
   [Required(ErrorMessage = "CommunicationId is required.")]
   public int CommunicationId { get; set; }
-
+  [Required(ErrorMessage="Status foreign key (CommunicationStatusId) is required.")]
   public int CommunicationStatusId { get; set; }
-  [Required(ErrorMessage = "Status is required.")]
   public CommunicationStatus Status { get; set; } = null!;
 
   public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

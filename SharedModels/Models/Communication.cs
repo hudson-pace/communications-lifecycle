@@ -8,9 +8,8 @@ public class Communication
 
   [Required(ErrorMessage = "Title is required.")] 
   public string Title { get; set; } = null!;
-
+  [Required(ErrorMessage = "Type foreign key (CommunicationTypeId) is required.")]
   public int CommunicationTypeId { get; set; }
-  [Required(ErrorMessage = "Type is required.")]
   public CommunicationType Type { get; set; } = null!;
 
   public ICollection<CommunicationStatusChange> StatusHistory { get; set; } = new List<CommunicationStatusChange>();
